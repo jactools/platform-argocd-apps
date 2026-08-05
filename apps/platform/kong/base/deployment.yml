@@ -19,10 +19,15 @@ spec:
     spec:
       containers:
         - name: kong
-          image: kong:3.9
+          image: jacbeekers/platform-kong:0.1.0
+          command: ["/docker-entrypoint.sh"]
+          args: ["kong", "docker-start"]
           ports:
             - containerPort: 8000
               name: proxy
+              protocol: TCP
+            - containerPort: 8443
+              name: https
               protocol: TCP
             - containerPort: 8444
               name: admin

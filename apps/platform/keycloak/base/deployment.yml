@@ -19,8 +19,9 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: quay.io/keycloak/keycloak:26.0
-          args: ["start", "--import-realm", "--http-relative-path=/auth"]
+          image: jacbeekers/platform-keycloak:0.1.0
+          command: ["/opt/platform-keycloak/scripts/start-keycloak.sh"]
+          args: ["start"]
           ports:
             - containerPort: 8443
               name: https
@@ -41,7 +42,7 @@ spec:
                 configMapKeyRef:
                   name: keycloak-config
                   key: KC_HOSTNAME_STRICT
-            - name: KC_HTTPS_RELATIVE_PATH
+            - name: KC_HTTP_RELATIVE_PATH
               valueFrom:
                 configMapKeyRef:
                   name: keycloak-config

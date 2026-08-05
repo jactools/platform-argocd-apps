@@ -9,8 +9,9 @@ spec:
       restartPolicy: Never
       containers:
         - name: kong
-          image: kong:3.9
-          command: ["kong", "migrations", "bootstrap"]
+          image: jacbeekers/platform-kong:0.1.0
+          command: ["/docker-entrypoint.sh"]
+          args: ["kong", "migrations", "bootstrap"]
           env:
             - name: KONG_DATABASE
               valueFrom:
