@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kong
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "{{ARGOCD_REPO_URL}}"
+    targetRevision: HEAD
+    path: apps/platform/kong/overlays/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-kong
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

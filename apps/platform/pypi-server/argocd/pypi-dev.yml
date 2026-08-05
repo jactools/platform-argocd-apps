@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-pypi-server
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "{{ARGOCD_REPO_URL}}"
+    targetRevision: HEAD
+    path: apps/platform/pypi-server/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-registry
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

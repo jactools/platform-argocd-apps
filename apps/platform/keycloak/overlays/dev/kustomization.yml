@@ -7,9 +7,20 @@ commonLabels:
   platform.jaccloud.nl/environment: dev
 
 resources:
-  - ../base
+  - ../../base
 
-# Dev-specific patches go here
+# Use official Keycloak image for now — swap to custom platform-keycloak when built
 # images:
-#   - name: docker-registry.dev.jac.dot:5000/jacbeekers/platform-keycloak
+#   - name: quay.io/keycloak/keycloak:26.0
+#     newName: docker-registry.dev.jac.dot:5000/jacbeekers/platform-keycloak
 #     newTag: "0.1.0"
+
+# Dev ingress hostname
+patches:
+  - target:
+      kind: Ingress
+      name: keycloak
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: keycloak.dev.jac.dot

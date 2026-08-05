@@ -7,9 +7,20 @@ commonLabels:
   platform.jaccloud.nl/environment: test
 
 resources:
-  - ../base
+  - ../../base
 
-# Test-specific patches go here
-# images:
-#   - name: docker-registry.jacloud.nl:5000/jacbeekers/platform-kong
-#     newTag: "0.1.0"
+# Test-specific Kong image (pulled from test registry)
+images:
+  - name: kong:3.10
+    newName: docker-registry.jacloud.nl:5000/jacbeekers/platform-kong
+    newTag: "0.1.0"
+
+# Test ingress hostname
+patches:
+  - target:
+      kind: Ingress
+      name: kong-proxy
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong.jacloud.nl

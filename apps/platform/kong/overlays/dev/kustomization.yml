@@ -7,9 +7,20 @@ commonLabels:
   platform.jaccloud.nl/environment: dev
 
 resources:
-  - ../base
+  - ../../base
 
-# Dev-specific patches go here
+# Use official Kong image for now — swap to custom platform-kong image when built
 # images:
-#   - name: docker-registry.dev.jac.dot:5000/jacbeekers/platform-kong
+#   - name: kong:3.9
+#     newName: docker-registry.dev.jac.dot:5000/jacbeekers/platform-kong
 #     newTag: "0.1.0"
+
+# Dev ingress hostname
+patches:
+  - target:
+      kind: Ingress
+      name: kong-proxy
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong.dev.jac.dot

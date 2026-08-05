@@ -7,9 +7,42 @@ commonLabels:
   platform.jaccloud.nl/environment: test
 
 resources:
-  - ../base
+  - ../../base
 
-# Test-specific patches go here
-# images:
-#   - name: docker-registry.jacloud.nl:5000/jacbeekers/platform-observability
-#     newTag: "0.1.0"
+# Test ingress hostnames
+patches:
+  - target:
+      kind: Ingress
+      name: grafana
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: grafana.jacloud.nl
+  - target:
+      kind: Ingress
+      name: loki
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: loki.jacloud.nl
+  - target:
+      kind: Ingress
+      name: prometheus
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: prometheus.jacloud.nl
+  - target:
+      kind: Ingress
+      name: tempo
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: tempo.jacloud.nl
+  - target:
+      kind: Ingress
+      name: otel-collector
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: otel-collector.jacloud.nl

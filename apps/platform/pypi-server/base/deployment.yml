@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pypi-server
+  labels:
+    app.kubernetes.io/name: pypi-server
+    app.kubernetes.io/component: pypi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pypi-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pypi-server
+        app.kubernetes.io/component: pypi
+    spec:
+      containers:
+        - name: pypi
+          image: pypiserver/pypiserver:latest
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          args:
+            - run
+            - "-i"
+            - "0.0.0.0"
+            - "-p"
+            - "8080"
+            - "--disable-fallback"
+            - /packages
+          volumeMounts:
+            - name: packages
+              mountPath: /packages
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /simple/
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: packages
+          emptyDir: {}

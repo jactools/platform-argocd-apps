@@ -1,13 +1,20 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Platform service: observability
-# Base manifests — service-specific resources go here
-# Populated in W3 (Platform service manifests and ArgoCD apps)
+# Platform service: Observability stack
+# Components: Loki, Prometheus, Tempo, Grafana, OTel Collector, Pushgateway
 
 commonLabels:
   platform.jaccloud.nl/managed-by: argocd
   platform.jaccloud.nl/service: observability
   platform.jaccloud.nl/tenant: platform
 
-resources: []
+resources:
+  - namespace.yml
+  - loki.yml
+  - prometheus.yml
+  - tempo.yml
+  - grafana.yml
+  - pushgateway.yml
+  - otel-collector.yml
+  - ingress.yml

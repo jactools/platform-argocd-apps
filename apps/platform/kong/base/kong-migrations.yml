@@ -1,0 +1,49 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kong-migrations
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: kong
+          image: kong:3.9
+          command: ["kong", "migrations", "bootstrap"]
+          env:
+            - name: KONG_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: kong-config
+                  key: KONG_DATABASE
+            - name: KONG_PG_HOST
+              value: "kong-db"
+            - name: KONG_PG_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: kong-config
+                  key: KONG_PG_PORT
+            - name: KONG_PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: kong-db-credentials
+                  key: KONG_PG_DATABASE
+            - name: KONG_PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: kong-db-credentials
+                  key: KONG_PG_USER
+            - name: KONG_PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kong-db-credentials
+                  key: KONG_PG_PASSWORD
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+  backoffLimit: 3
