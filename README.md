@@ -1,0 +1,46 @@
+# Platform ArgoCD Applications
+
+This repository contains all ArgoCD Application definitions for the platform-foundation Kind clusters.
+
+## Structure
+
+```
+apps/
+├── platform/          # Platform services (owned by platform-foundation)
+│   ├── kong/
+│   ├── keycloak/
+│   └── observability/
+└── tenants/           # Tenant workloads (owned by consumer repos)
+    ├── dq/
+    └── maas/
+
+argocd/
+├── install.yml        # ArgoCD installation manifests
+└── config/
+    └── projects/      # ArgoCD Project definitions
+
+environments/
+├── dev/               # Dev environment values
+└── test/              # Test environment values
+```
+
+## Environments
+
+| Environment | Cluster | Overlay | Sync |
+|---|---|---|---|
+| dev | Kind (local) | `apps/*/overlays/dev/` | Auto |
+| test | Kind (Debian) | `apps/*/overlays/test/` | Auto |
+
+## Adding a new platform service
+
+1. Create `apps/platform/<service>/base/` with Kubernetes manifests
+2. Create `apps/platform/<service>/overlays/dev/` with dev kustomization
+3. Create `apps/platform/<service>/overlays/test/` with test kustomization
+4. Create `apps/platform/<service>/argocd-app.yml`
+5. Commit and push — ArgoCD will sync automatically
+
+## Adding a new tenant
+
+1. Create `apps/tenants/<tenant>/` with the tenant's ArgoCD Applications
+2. Reference the tenant's git repository as the source
+3. Commit and push — ArgoCD will sync automatically

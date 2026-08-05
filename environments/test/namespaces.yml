@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: platform-kong
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: platform-keycloak
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: platform-observability
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: platform-tls
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: dq-test
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+        platform.jaccloud.nl/tenant: dq
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: maas-test
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+        platform.jaccloud.nl/tenant: maas

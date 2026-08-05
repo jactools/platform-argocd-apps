@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: platform-observability
+
+commonLabels:
+  platform.jaccloud.nl/environment: dev
+
+resources:
+  - ../base
+
+# Dev-specific patches go here
+# images:
+#   - name: docker-registry.dev.jac.dot:5000/jacbeekers/platform-observability
+#     newTag: "0.1.0"

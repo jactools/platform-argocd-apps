@@ -1,0 +1,22 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: argocd
+spec:
+  description: Platform services managed by platform-foundation
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: platform-kong
+      server: '*'
+    - namespace: platform-keycloak
+      server: '*'
+    - namespace: platform-observability
+      server: '*'
+    - namespace: platform-tls
+      server: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
