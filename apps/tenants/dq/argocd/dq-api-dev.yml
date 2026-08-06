@@ -9,10 +9,10 @@ spec:
   source:
     repoURL: "{{DQ_MADE_EASY_REPO_URL}}"
     targetRevision: HEAD
-    path: k8s/overlays/dev
+    path: infra/k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dq-dev
+    namespace: dq-made-easy-dev
   syncPolicy:
     automated:
       prune: true

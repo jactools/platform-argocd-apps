@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tenant-dq-engine-test
+  name: tenant-dq-engine
   namespace: argocd
 spec:
   project: tenant
   source:
     repoURL: "{{DQ_MADE_EASY_REPO_URL}}"
     targetRevision: HEAD
-    path: k8s/overlays/test
+    path: infra/k8s/overlays/test
   destination:
     server: https://kubernetes.default.svc
-    namespace: dq-test
+    namespace: dq-made-easy-test
   syncPolicy:
     automated:
       prune: true
