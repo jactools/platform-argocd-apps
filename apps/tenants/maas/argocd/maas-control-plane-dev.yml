@@ -8,8 +8,8 @@ spec:
   project: tenant
   source:
     repoURL: "{{MAAS_REPO_URL}}"
-    targetRevision: HEAD
-    path: k8s/overlays/dev
+    targetRevision: feature/prototype
+    path: k8s/overlays/dev-control-plane
   destination:
     server: https://kubernetes.default.svc
     namespace: maas-dev
