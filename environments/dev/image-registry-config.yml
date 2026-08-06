@@ -1,0 +1,119 @@
+# Image registry configuration for dev environment
+#
+# This file defines the registry, namespace, and pinned image tags
+# that consumer overlays should reference.
+#
+# Consumers use Kustomize `images:` patches to substitute their
+# deployment image references with the pinned registry + tag.
+#
+# Updated by platform pipeline on each image publish.
+# Do not edit manually — use the platform publish scripts.
+
+---
+registry: "docker-registry.dev.jac.dot:5000"
+namespace: "jacbeekers"
+
+# ── Platform images ─────────────────────────────────────────────────
+# Shared services managed by platform-foundation.
+# Consumers reference these for dependencies (Kong, Keycloak, etc.).
+
+platform:
+  kong:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/platform-kong"
+    tag: "0.1.0"
+    description: "Kong API Gateway"
+  keycloak:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/platform-keycloak"
+    tag: "0.1.0"
+    description: "Keycloak SSO"
+  container-metrics:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/platform-container-metrics"
+    tag: "0.1.0"
+    description: "Container metrics exporter"
+
+# ── dq-made-easy images ─────────────────────────────────────────────
+# Tenant images managed by the dq-made-easy repository.
+
+dq:
+  api:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/dq-api"
+    tag: "0.1.0"
+    description: "DQ FastAPI backend"
+  ui:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/dq-ui"
+    tag: "0.1.0"
+    description: "DQ React frontend"
+  engine:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/dq-engine"
+    tag: "0.1.0"
+    description: "DQ Spark engine"
+  python-base:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/dq-made-easy-python-base"
+    tag: "0.1.0"
+    description: "DQ Python base image"
+
+# ── metadata-as-a-service images ────────────────────────────────────
+# Tenant images managed by the metadata-as-a-service repository.
+
+maas:
+  api:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-api"
+    tag: "0.1.0"
+    description: "MaaS zone API"
+  coordinator:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-coordinator"
+    tag: "0.1.0"
+    description: "MaaS zone coordinator"
+  control-plane:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-control-plane"
+    tag: "0.1.0"
+    description: "MaaS control plane"
+  central-repo:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-central-repo"
+    tag: "0.1.0"
+    description: "MaaS central repository"
+  scenario-catalog:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-scenario-catalog"
+    tag: "0.1.0"
+    description: "MaaS scenario catalog"
+  orchestrator:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-orchestrator"
+    tag: "0.1.0"
+    description: "MaaS orchestrator"
+  bff:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-bff"
+    tag: "0.1.0"
+    description: "MaaS Backend For Frontend"
+  web:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/maas-web"
+    tag: "0.1.0"
+    description: "MaaS React UI"
+
+# ── Shared base images ──────────────────────────────────────────────
+# Common base images used across tenants.
+
+base:
+  python:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/python-base"
+    tag: "3.13-slim"
+    description: "Python base image"
+  node:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/node-base"
+    tag: "22-slim"
+    description: "Node.js base image"
+  nginx:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/nginx"
+    tag: "1.27-alpine"
+    description: "Nginx base image"
+  postgres:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/postgres"
+    tag: "17-alpine"
+    description: "PostgreSQL"
+  redis:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/redis"
+    tag: "8-alpine"
+    description: "Redis"
+  minio:
+    image: "docker-registry.dev.jac.dot:5000/jacbeekers/minio"
+    tag: "latest"
+    description: "MinIO object storage"

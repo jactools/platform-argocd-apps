@@ -9,7 +9,13 @@ spec:
   sourceRepos:
     - '*'
   destinations:
-    - namespace: '*'
+    - namespace: dq-dev
+      server: '*'
+    - namespace: dq-test
+      server: '*'
+    - namespace: maas-dev
+      server: '*'
+    - namespace: maas-test
       server: '*'
   clusterResourceWhitelist:
     - group: ''
