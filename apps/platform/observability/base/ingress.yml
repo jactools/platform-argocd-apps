@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: grafana.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -30,7 +30,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: loki.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -51,7 +51,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: prometheus.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -72,7 +72,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: tempo.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -93,7 +93,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: otel-collector.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
