@@ -77,24 +77,21 @@ data:
       http_listen_port: 3100
     memberlist:
       join_members: []
-    storage:
-      type: local
-      local:
-        directory: /loki
+    common:
+      path_prefix: /loki
+      storage:
+        filesystem:
+          chunks_directory: /loki/chunks
+          rules_directory: /loki/rules
+      replication_factor: 1
+      ring:
+        kvstore:
+          store: inmemory
     analytics:
       reporting_enabled: false
     compactor:
       working_directory: /loki/compactor
-      shared_store: filesystem
-    distributor:
-      ring:
-        kvstore:
-          store: inmemory
-    ingester:
-      ring:
-        kvstore:
-          store: inmemory
-        replication_factor: 1
+      retention_enabled: false
     schema_config:
       configs:
         - from: "2024-01-01"
