@@ -9,7 +9,7 @@ resources:
   - trino/argocd/trino-dev.yml
   - llm/argocd/llm-dev.yml
   - airflow/argocd/airflow-dev.yml
-  - ingestion-runner/argocd/ingestion-runner-dev.yml
+
 
 patches:
   - patch: |
@@ -61,10 +61,3 @@ patches:
     target:
       kind: Application
       name: platform-airflow
-  - patch: |
-      - op: replace
-        path: /spec/source/repoURL
-        value: file:///repos/platform-argocd-apps
-    target:
-      kind: Application
-      name: platform-ingestion-runner
