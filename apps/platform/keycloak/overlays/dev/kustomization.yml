@@ -9,13 +9,7 @@ commonLabels:
 resources:
   - ../../base
 
-# Use official Keycloak image for now — swap to custom platform-keycloak when built
-# images:
-#   - name: quay.io/keycloak/keycloak:26.0
-#     newName: docker-registry.dev.jac.dot:5000/jacbeekers/platform-keycloak
-#     newTag: "0.1.0"
-
-# Dev ingress hostname
+# Dev ingress hostname and TLS
 patches:
   - target:
       kind: Ingress
@@ -23,4 +17,7 @@ patches:
     patch: |
       - op: replace
         path: /spec/rules/0/host
+        value: keycloak.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
         value: keycloak.dev.jac.dot

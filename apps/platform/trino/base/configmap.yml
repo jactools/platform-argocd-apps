@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trino-config
+data:
+  TRINO_COORDINATOR: "true"
+  TRINO_HTTP_PORT: "8080"
+  TRINO_NODE_ENVIRONMENT: "platform"
+  TRINO_NODE_DATA_DIR: "/var/trino/data"
+  TRINO_LOG_LEVEL: "INFO"
+  TRINO_DISABLE_OUTPUT_SERIALIZATION_VALIDATION: "true"

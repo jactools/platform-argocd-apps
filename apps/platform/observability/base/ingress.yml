@@ -8,6 +8,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: grafana-tls
   rules:
     - host: "<HOST>"
       http:
@@ -29,6 +33,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: loki-tls
   rules:
     - host: "<HOST>"
       http:
@@ -50,6 +58,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: prometheus-tls
   rules:
     - host: "<HOST>"
       http:
@@ -71,6 +83,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: tempo-tls
   rules:
     - host: "<HOST>"
       http:
@@ -92,6 +108,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: otel-collector-tls
   rules:
     - host: "<HOST>"
       http:

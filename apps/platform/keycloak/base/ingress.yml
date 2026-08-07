@@ -9,6 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: platform-keycloak-tls
   rules:
     - host: "<HOST>"
       http:

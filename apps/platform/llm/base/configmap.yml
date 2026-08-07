@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-config
+data:
+  LLM_PORT: "8000"
+  LLM_MODEL_NAME: "default"
+  LLM_MAX_TOKENS: "4096"
+  LLM_TEMPERATURE: "0.7"
+  LLM_LOG_LEVEL: "INFO"
