@@ -40,7 +40,7 @@ spec:
               mountPath: /opt/airflow
           readinessProbe:
             httpGet:
-              path: /health
+              path: /api/v2/monitor/health
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -48,7 +48,7 @@ spec:
             failureThreshold: 3
           livenessProbe:
             httpGet:
-              path: /health
+              path: /api/v2/monitor/health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
