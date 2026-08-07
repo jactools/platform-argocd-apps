@@ -3,8 +3,10 @@ kind: Kustomization
 
 namespace: platform-kafka
 
-commonLabels:
-  platform.jaccloud.nl/environment: dev
+labels:
+  - pairs:
+      platform.jaccloud.nl/environment: dev
+    includeSelectors: true
 
 resources:
   - ../../base
