@@ -31,3 +31,13 @@ patches:
       - op: replace
         path: /spec/tls/0/hosts/0
         value: kong-manager.dev.jac.dot
+  - target:
+      kind: Ingress
+      name: kong-admin
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong-admin.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong-admin.dev.jac.dot
