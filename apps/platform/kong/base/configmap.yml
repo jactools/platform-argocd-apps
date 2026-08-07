@@ -13,5 +13,9 @@ data:
   KONG_PROXY_ERROR_LOG: "/dev/stderr"
   KONG_ADMIN_ERROR_LOG: "/dev/stderr"
   KONG_ADMIN_LISTEN: "0.0.0.0:8444 ssl"
+  # Kong Manager (web UI on port 8002)
+  KONG_PORTAL_API_URL: "https://portal.dev.jac.dot:10443"
+  KONG_PORTAL_GUI_URL: "https://portal-gui.dev.jac.dot:10443"
+  KONG_ADMIN_GUI_URL: "https://kong-admin.dev.jac.dot:10444"
   KONG_DNS_VALID_TTL: "1"
   KONG_DNS_STALE_TTL: "0"

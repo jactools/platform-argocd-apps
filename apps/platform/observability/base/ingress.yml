@@ -8,8 +8,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: grafana-tls
   rules:
-    - host: grafana.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -29,8 +33,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: loki-tls
   rules:
-    - host: loki.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -50,8 +58,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: prometheus-tls
   rules:
-    - host: prometheus.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -71,8 +83,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: tempo-tls
   rules:
-    - host: tempo.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -92,8 +108,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: otel-collector-tls
   rules:
-    - host: otel-collector.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /

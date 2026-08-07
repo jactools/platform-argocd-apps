@@ -1,4 +1,5 @@
 ---
+# Kong proxy — exposed via Ingress
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -8,8 +9,12 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: platform-kong-tls
   rules:
-    - host: kong.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /
@@ -19,3 +24,55 @@ spec:
                 name: kong-proxy
                 port:
                   number: 8000
+---
+# Kong Manager (web UI)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-manager
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: kong-manager.dev.jac.dot-tls
+  rules:
+    - host: "<HOST>"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kong-manager
+                port:
+                  number: 8002
+---
+# Kong Admin API
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-admin
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: kong-admin.dev.jac.dot-tls
+  rules:
+    - host: "<HOST>"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kong-admin
+                port:
+                  number: 8444

@@ -9,7 +9,7 @@ commonLabels:
 resources:
   - ../../base
 
-# Dev ingress hostnames
+# Dev ingress hostnames and TLS
 patches:
   - target:
       kind: Ingress
@@ -18,12 +18,18 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: grafana.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: grafana.dev.jac.dot
   - target:
       kind: Ingress
       name: loki
     patch: |
       - op: replace
         path: /spec/rules/0/host
+        value: loki.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
         value: loki.dev.jac.dot
   - target:
       kind: Ingress
@@ -32,6 +38,9 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: prometheus.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: prometheus.dev.jac.dot
   - target:
       kind: Ingress
       name: tempo
@@ -39,10 +48,16 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: tempo.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: tempo.dev.jac.dot
   - target:
       kind: Ingress
       name: otel-collector
     patch: |
       - op: replace
         path: /spec/rules/0/host
+        value: otel-collector.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
         value: otel-collector.dev.jac.dot

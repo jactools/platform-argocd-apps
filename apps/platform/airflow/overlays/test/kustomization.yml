@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: platform-airflow
+
+commonLabels:
+  platform.jaccloud.nl/environment: test
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: Ingress
+      name: airflow
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: airflow.test.jac.dot

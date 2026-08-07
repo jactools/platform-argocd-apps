@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tenant-maas-central-repo-test
+  namespace: argocd
+spec:
+  project: tenant
+  source:
+    repoURL: "{{MAAS_REPO_URL}}"
+    targetRevision: feature/prototype
+    path: k8s/overlays/test-central-repo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: maas-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -18,3 +18,15 @@ resources:
   - pushgateway.yml
   - otel-collector.yml
   - ingress.yml
+
+# Required platform annotations on workloads
+patches:
+  - target:
+      kind: Deployment
+    patch: |
+      - op: add
+        path: /metadata/annotations
+        value:
+          platform.jaccloud.nl/target-id: CLUSTER
+          platform.jaccloud.nl/workload-kind: service
+          platform.jaccloud.nl/maas-register: "true"

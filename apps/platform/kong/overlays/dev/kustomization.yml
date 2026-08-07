@@ -9,13 +9,7 @@ commonLabels:
 resources:
   - ../../base
 
-# Use official Kong image for now — swap to custom platform-kong image when built
-# images:
-#   - name: kong:3.9
-#     newName: docker-registry.dev.jac.dot:5000/jacbeekers/platform-kong
-#     newTag: "0.1.0"
-
-# Dev ingress hostname
+# Dev ingress hostnames and TLS
 patches:
   - target:
       kind: Ingress
@@ -24,3 +18,26 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: kong.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong.dev.jac.dot
+  - target:
+      kind: Ingress
+      name: kong-manager
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong-manager.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong-manager.dev.jac.dot
+  - target:
+      kind: Ingress
+      name: kong-admin
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong-admin.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong-admin.dev.jac.dot

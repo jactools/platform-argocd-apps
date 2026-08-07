@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tenant-dq-engine
+  namespace: argocd
+spec:
+  project: tenant
+  source:
+    repoURL: "{{DQ_MADE_EASY_REPO_URL}}"
+    targetRevision: feature/dq-prototype
+    path: infra/k8s/overlays/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dq-made-easy-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

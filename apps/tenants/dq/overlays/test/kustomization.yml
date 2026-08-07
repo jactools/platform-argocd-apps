@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dq-test
+
+commonLabels:
+  platform.jaccloud.nl/environment: test
+
+resources:
+  - ../../base
+
+# Rename the base namespace 'dq' to 'dq-test'
+patches:
+  - target:
+      kind: Namespace
+      name: dq
+    patch: |
+      - op: replace
+        path: /metadata/name
+        value: dq-test

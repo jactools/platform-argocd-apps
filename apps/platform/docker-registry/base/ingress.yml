@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: docker-registry.dev.jac.dot
+    - host: "<HOST>"
       http:
         paths:
           - path: /

@@ -1,0 +1,111 @@
+# Image registry configuration for test environment
+#
+# Same structure as dev, but pointing to the test registry.
+# Tags are identical — images are built once, promoted by reference.
+#
+# Updated by platform pipeline on each image publish.
+# Do not edit manually — use the platform publish scripts.
+
+---
+registry: "docker-registry.jacloud.nl:5000"
+namespace: "jacbeekers"
+
+# ── Platform images ─────────────────────────────────────────────────
+
+platform:
+  kong:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/platform-kong"
+    tag: "0.1.0"
+    description: "Kong API Gateway"
+  keycloak:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/platform-keycloak"
+    tag: "0.1.0"
+    description: "Keycloak SSO"
+  container-metrics:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/platform-container-metrics"
+    tag: "0.1.0"
+    description: "Container metrics exporter"
+
+# ── dq-made-easy images ─────────────────────────────────────────────
+
+dq:
+  api:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/dq-api"
+    tag: "0.1.0"
+    description: "DQ FastAPI backend"
+  ui:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/dq-ui"
+    tag: "0.1.0"
+    description: "DQ React frontend"
+  engine:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/dq-engine"
+    tag: "0.1.0"
+    description: "DQ Spark engine"
+  python-base:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/dq-made-easy-python-base"
+    tag: "0.1.0"
+    description: "DQ Python base image"
+
+# ── metadata-as-a-service images ────────────────────────────────────
+
+maas:
+  api:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-api"
+    tag: "0.1.0"
+    description: "MaaS zone API"
+  coordinator:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-coordinator"
+    tag: "0.1.0"
+    description: "MaaS zone coordinator"
+  control-plane:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-control-plane"
+    tag: "0.1.0"
+    description: "MaaS control plane"
+  central-repo:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-central-repo"
+    tag: "0.1.0"
+    description: "MaaS central repository"
+  scenario-catalog:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-scenario-catalog"
+    tag: "0.1.0"
+    description: "MaaS scenario catalog"
+  orchestrator:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-orchestrator"
+    tag: "0.1.0"
+    description: "MaaS orchestrator"
+  bff:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-bff"
+    tag: "0.1.0"
+    description: "MaaS Backend For Frontend"
+  web:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/maas-web"
+    tag: "0.1.0"
+    description: "MaaS React UI"
+
+# ── Shared base images ──────────────────────────────────────────────
+
+base:
+  python:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/python-base"
+    tag: "3.13-slim"
+    description: "Python base image"
+  node:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/node-base"
+    tag: "22-slim"
+    description: "Node.js base image"
+  nginx:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/nginx"
+    tag: "1.27-alpine"
+    description: "Nginx base image"
+  postgres:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/postgres"
+    tag: "17-alpine"
+    description: "PostgreSQL"
+  redis:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/redis"
+    tag: "8-alpine"
+    description: "Redis"
+  minio:
+    image: "docker-registry.jacloud.nl:5000/jacbeekers/minio"
+    tag: "latest"
+    description: "MinIO object storage"
