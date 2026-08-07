@@ -26,6 +26,9 @@ spec:
             - containerPort: 8000
               name: proxy
               protocol: TCP
+            - containerPort: 8002
+              name: manager
+              protocol: TCP
             - containerPort: 8443
               name: https
               protocol: TCP

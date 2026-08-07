@@ -28,3 +28,18 @@ spec:
       protocol: TCP
   selector:
     app.kubernetes.io/name: kong
+---
+# Kong Manager (web UI)
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-manager
+spec:
+  type: ClusterIP
+  ports:
+    - name: manager
+      port: 8002
+      targetPort: 8002
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong
