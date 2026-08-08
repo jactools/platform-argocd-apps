@@ -1,4 +1,4 @@
-# Kyverno controller (Helm chart)
+# Kyverno controller (pre-rendered manifests from v1.13.2)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -7,26 +7,9 @@ metadata:
 spec:
   project: platform
   source:
-    repoURL: https://kyverno.github.io/kyverno
-    targetRevision: 3.3.6
-    chart: kyverno
-    helm:
-      values: |
-        backgroundController:
-          enabled: true
-          replicaCount: 1
-        cleanUpController:
-          enabled: false
-        reportsController:
-          enabled: false
-        admissionController:
-          replicaCount: 1
-        config:
-          resourceFilters: |
-            - kubernetes.io/*
-            - kyverno/*
-            - argocd/*
-            - kube-system/*
+    repoURL: "{{ARGOCD_REPO_URL}}"
+    targetRevision: "{{TARGET_BRANCH}}"
+    path: apps/platform/kyverno/base/vendor
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
