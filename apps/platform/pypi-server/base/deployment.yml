@@ -32,9 +32,7 @@ spec:
             - "8080"
             - "--disable-fallback"
             - "--overwrite"
-            - "--hash-algorithm"
-            - md5
-            - "--auth"
+            - "-a"
             - /etc/pypiserver/htpasswd
             - /packages
           volumeMounts:
