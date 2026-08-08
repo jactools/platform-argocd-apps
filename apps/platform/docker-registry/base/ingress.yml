@@ -4,11 +4,16 @@ kind: Ingress
 metadata:
   name: docker-registry
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - "<HOST>"
+      secretName: docker-registry-tls
   rules:
     - host: "<HOST>"
       http:
