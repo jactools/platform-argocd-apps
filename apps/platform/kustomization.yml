@@ -9,7 +9,8 @@ resources:
   - trino/argocd/trino-dev.yml
   - llm/argocd/llm-dev.yml
   - airflow/argocd/airflow-dev.yml
-
+  - docker-registry/argocd/docker-registry-dev.yml
+  - pypi-server/argocd/pypi-dev.yml
 
 patches:
   - patch: |
@@ -61,3 +62,17 @@ patches:
     target:
       kind: Application
       name: platform-airflow
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-docker-registry
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-pypi-server
