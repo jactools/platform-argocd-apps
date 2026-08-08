@@ -1,3 +1,4 @@
+# Kyverno controller (Helm chart)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -10,10 +11,7 @@ spec:
     targetRevision: 3.3.6
     chart: kyverno
     helm:
-      valueFiles:
-        - $values/overlays/dev/kustomization.yml
       values: |
-        # Minimal Kyverno for dev cluster
         backgroundController:
           enabled: true
           replicaCount: 1
@@ -29,7 +27,6 @@ spec:
             - kyverno/*
             - argocd/*
             - kube-system/*
-  sourceTargetRevision: 3.3.6
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
@@ -41,7 +38,7 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
 ---
-# Separate app for the policies (Kustomize overlay)
+# Kyverno policies (Kustomize overlay)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -62,5 +59,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  dependsOn:
-    - name: platform-kyverno
