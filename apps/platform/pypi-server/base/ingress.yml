@@ -18,3 +18,13 @@ spec:
                 name: pypi-server
                 port:
                   number: 8080
+    - host: "<HOST_HOST>"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pypi-server
+                port:
+                  number: 8080

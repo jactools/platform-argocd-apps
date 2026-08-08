@@ -17,3 +17,6 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: packages.dev.jac.dot
+      - op: replace
+        path: /spec/rules/1/host
+        value: packages.host.dev.jac.dot
