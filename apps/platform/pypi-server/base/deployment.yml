@@ -31,10 +31,19 @@ spec:
             - "-p"
             - "8080"
             - "--disable-fallback"
+            - "--overwrite"
+            - "--hash-algorithm"
+            - md5
+            - "--auth"
+            - /etc/pypiserver/htpasswd
             - /packages
           volumeMounts:
             - name: packages
               mountPath: /packages
+            - name: auth
+              mountPath: /etc/pypiserver/htpasswd
+              subPath: htpasswd
+              readOnly: true
           resources:
             requests:
               cpu: "10m"
@@ -52,3 +61,6 @@ spec:
       volumes:
         - name: packages
           emptyDir: {}
+        - name: auth
+          secret:
+            secretName: pypi-server-auth
