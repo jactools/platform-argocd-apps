@@ -14,8 +14,21 @@ spec:
     - hosts:
         - "<HOST>"
       secretName: docker-registry-tls
+    - hosts:
+        - "<HOST_HOST>"
+      secretName: docker-registery-host-tls
   rules:
     - host: "<HOST>"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: docker-registry
+                port:
+                  number: 5000
+    - host: "<HOST_HOST>"
       http:
         paths:
           - path: /
