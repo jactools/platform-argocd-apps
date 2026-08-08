@@ -1,0 +1,41 @@
+# Kyverno Helm chart values
+# Full reference: https://kyverno.io/extensions/helm-chart/
+
+# Deploy minimal Kyverno (webhooks only, no background controllers we don't need)
+backgroundController:
+  enabled: true
+  replicaCount: 1
+
+cleanUpController:
+  enabled: false
+
+crds:
+  install: true
+
+reportsController:
+  enabled: false
+
+admissionController:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+service:
+  admissionController:
+    port: 443
+
+config:
+  resourceFilters: |
+    - kubernetes.io/*
+    - kyverno/*
+    - argocd/*
+    - kube-system/*
+    - kube-public/*
+    - kube-node-lease/*
+    - cert-manager/*
+    - ingress-nginx/*

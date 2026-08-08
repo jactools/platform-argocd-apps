@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: https://kyverno.github.io/kyverno
+    targetRevision: 3.3.6
+    chart: kyverno
+    helm:
+      valueFiles:
+        - $values/overlays/dev/kustomization.yml
+      values: |
+        # Minimal Kyverno for dev cluster
+        backgroundController:
+          enabled: true
+          replicaCount: 1
+        cleanUpController:
+          enabled: false
+        reportsController:
+          enabled: false
+        admissionController:
+          replicaCount: 1
+        config:
+          resourceFilters: |
+            - kubernetes.io/*
+            - kyverno/*
+            - argocd/*
+            - kube-system/*
+  sourceTargetRevision: 3.3.6
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+# Separate app for the policies (Kustomize overlay)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno-policies
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "{{ARGOCD_REPO_URL}}"
+    targetRevision: "{{TARGET_BRANCH}}"
+    path: apps/platform/kyverno/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  dependsOn:
+    - name: platform-kyverno

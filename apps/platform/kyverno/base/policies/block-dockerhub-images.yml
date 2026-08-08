@@ -1,0 +1,61 @@
+# Block all images from docker.io (public Docker Hub)
+# Enforced at admission time — pods/deployments referencing docker.io/* are rejected.
+#
+# Rationale:
+# - Kind cluster has no internet access; docker.io images cannot be pulled.
+# - All images must come from the local docker-registry or be loaded via `kind load`.
+# - Prevents silent fallbacks to public images during development.
+#
+# Exceptions (namespaces):
+# - kyverno, argocd, ingress-nginx, cert-manager — platform system namespaces
+#   are allowed to pull from docker.io during bootstrap.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: block-dockerhub-images
+  annotations:
+    policies.kyverno.io/title: Block Docker Hub Images
+    policies.kyverno.io/category: Platform Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Blocks all container images from docker.io (public Docker Hub).
+      All images must be pulled from the local docker-registry or loaded
+      into the cluster via `kind load docker-image`.
+spec:
+  validationFailureAction: Enforce
+  background: false  # admission-only; no background scanning
+  rules:
+    - name: deny-dockerhub-containers
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+                - Job
+                - CronJob
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kyverno
+                - argocd
+                - ingress-nginx
+                - cert-manager
+                - kube-system
+                - kube-public
+                - kube-node-lease
+      validate:
+        message: >-
+          Images from docker.io are forbidden. Use the local docker-registry
+          (docker-registery.host.dev.jac.dot:10443) or load images via `kind load docker-image`.
+        pattern:
+          spec:
+            template:
+              spec:
+                =(initContainers):
+                  -(image: "docker.io/*")
+                containers:
+                  -(image: "docker.io/*")
