@@ -33,7 +33,11 @@ spec:
             - "--disable-fallback"
             - "--overwrite"
             - "-a"
+            - "download,list,update"
+            - "-P"
             - /etc/pypiserver/htpasswd
+            - "--health-endpoint"
+            - /healthz
             - /packages
           volumeMounts:
             - name: packages
@@ -51,7 +55,7 @@ spec:
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /simple/
+              path: /healthz
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
