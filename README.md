@@ -2,6 +2,10 @@
 
 This repository contains all ArgoCD Application definitions for the platform-foundation Kind clusters.
 
+## Plans
+
+- [GitOps Repository Restructure Plan](./GITOPS_REPOSITORY_RESTRUCTURE_PLAN.md)
+
 ## Structure
 
 ```
