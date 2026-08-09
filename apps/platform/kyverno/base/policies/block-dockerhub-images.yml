@@ -20,11 +20,6 @@ spec:
           - resources:
               kinds:
                 - Pod
-                - Deployment
-                - StatefulSet
-                - DaemonSet
-                - Job
-                - CronJob
       exclude:
         any:
           - resources:
@@ -40,9 +35,7 @@ spec:
         message: "Images from docker.io are forbidden. Use the local docker-registry (docker-registery.host.dev.jac.dot:10443) or load images via `kind load docker-image`."
         pattern:
           spec:
-            template:
-              spec:
-                =(initContainers):
-                  - X(image="docker.io/*"): "?*"
-                containers:
-                  - X(image="docker.io/*"): "?*"
+            containers:
+              - image: "!docker.io/*"
+            =(initContainers):
+              - image: "!docker.io/*"
