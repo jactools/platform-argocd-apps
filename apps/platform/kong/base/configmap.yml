@@ -19,3 +19,5 @@ data:
   KONG_ADMIN_GUI_URL: "https://kong-admin.dev.jac.dot:10444"
   KONG_DNS_VALID_TTL: "1"
   KONG_DNS_STALE_TTL: "0"
+  KONG_SSL_CERT: "/etc/kong/proxy/tls.crt"
+  KONG_SSL_CERT_KEY: "/etc/kong/proxy/tls.key"
