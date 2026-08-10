@@ -83,4 +83,11 @@ patches:
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
+      name: platform-kyverno
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
       name: platform-kyverno-policies

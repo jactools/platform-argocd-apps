@@ -8,7 +8,7 @@ spec:
   project: platform
   source:
     repoURL: "{{ARGOCD_REPO_URL}}"
-    targetRevision: "{{TARGET_BRANCH}}"
+    targetRevision: "feature/prototype"
     path: apps/platform/kyverno/base/vendor
   destination:
     server: https://kubernetes.default.svc
@@ -31,7 +31,7 @@ spec:
   project: platform
   source:
     repoURL: "{{ARGOCD_REPO_URL}}"
-    targetRevision: "{{TARGET_BRANCH}}"
+    targetRevision: "feature/prototype"
     path: apps/platform/kyverno/base
   destination:
     server: https://kubernetes.default.svc
