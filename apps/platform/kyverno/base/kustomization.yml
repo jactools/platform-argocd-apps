@@ -10,5 +10,4 @@ labels:
       platform.jaccloud.nl/component: kyverno
 
 resources:
-  - namespace.yml
   - policies/block-dockerhub-images.yml
