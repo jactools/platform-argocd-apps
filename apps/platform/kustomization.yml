@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+  - shared/argocd/shared-dev.yml
   - keycloak/argocd/keycloak-dev.yml
   - kong/argocd/kong-dev.yml
   - observability/argocd/observability-dev.yml
@@ -14,6 +15,13 @@ resources:
   - kyverno/argocd/kyverno-dev.yml
 
 patches:
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-shared
   - patch: |
       - op: replace
         path: /spec/source/repoURL
