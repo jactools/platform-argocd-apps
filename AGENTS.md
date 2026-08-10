@@ -115,6 +115,12 @@ packages/metadata-<name>/
 - Always use `venv/bin/python` for all Python commands (never bare `python`)
 - All paths are relative to the repository root
 
+### GitOps Write Policy
+- Treat Git as the source of truth for all ArgoCD-managed namespaces.
+- Avoid direct `kubectl` writes to ArgoCD-managed resources unless a break-glass emergency is explicitly required.
+- Use `kubectl` for read-only inspection and debugging only.
+- Follow [ARGOCD_KUBECTL_WRITE_POLICY.md](ARGOCD_KUBECTL_WRITE_POLICY.md) for the full namespace list, enforcement model, and emergency workflow.
+
 ### Port Safety — Process Killing
 **Only kill processes on ports in the 10000–11999 range** (dev/test environments).
 

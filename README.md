@@ -5,6 +5,7 @@ This repository contains all ArgoCD Application definitions for the platform-fou
 ## Plans
 
 - [GitOps Repository Restructure Plan](./GITOPS_REPOSITORY_RESTRUCTURE_PLAN.md)
+- [ArgoCD and kubectl Write Policy](./ARGOCD_KUBECTL_WRITE_POLICY.md)
 
 ## Structure
 
