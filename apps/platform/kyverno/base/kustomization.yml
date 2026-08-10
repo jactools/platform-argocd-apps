@@ -11,3 +11,4 @@ labels:
 
 resources:
   - policies/block-dockerhub-images.yml
+  - policies/block-argocd-managed-writes.yml

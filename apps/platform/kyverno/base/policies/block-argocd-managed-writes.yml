@@ -1,0 +1,107 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: block-argocd-managed-writes
+  annotations:
+    policies.kyverno.io/title: Block ArgoCD Managed Writes
+    policies.kyverno.io/category: Platform Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Blocks direct kubectl writes from human users to ArgoCD-managed
+      namespaces and repo-managed Kyverno policies. Changes must flow
+      through Git and ArgoCD reconciliation.
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: deny-human-writes-to-argocd-namespaces
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - argocd
+                - kyverno
+                - platform-kong
+                - platform-keycloak
+                - platform-observability
+                - platform-redis
+                - platform-tls
+                - dq-dev
+                - dq-test
+                - maas-dev
+                - maas-test
+      validate:
+        message: >-
+          Namespace changes for ArgoCD-managed environments must go through Git.
+          Direct kubectl writes are blocked for human users.
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.userInfo.username }}"
+                operator: NotMatches
+                value: "^system:.*"
+
+    - name: deny-human-writes-to-managed-namespaced-resources
+      match:
+        any:
+          - resources:
+              kinds:
+                - Application
+                - AppProject
+                - ConfigMap
+                - Deployment
+                - HorizontalPodAutoscaler
+                - Ingress
+                - Job
+                - NetworkPolicy
+                - PersistentVolumeClaim
+                - PodDisruptionBudget
+                - Role
+                - RoleBinding
+                - Secret
+                - Service
+                - ServiceAccount
+              namespaces:
+                - argocd
+                - kyverno
+                - platform-kong
+                - platform-keycloak
+                - platform-observability
+                - platform-redis
+                - platform-tls
+                - dq-dev
+                - dq-test
+                - maas-dev
+                - maas-test
+      validate:
+        message: >-
+          ArgoCD-managed resources in these namespaces must be updated through Git.
+          Direct kubectl writes are blocked for human users.
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.userInfo.username }}"
+                operator: NotMatches
+                value: "^system:.*"
+
+    - name: deny-human-writes-to-managed-clusterpolicies
+      match:
+        any:
+          - resources:
+              kinds:
+                - ClusterPolicy
+              names:
+                - block-dockerhub-images
+                - block-argocd-managed-writes
+      validate:
+        message: >-
+          Kyverno policies in this repository are ArgoCD-managed and must be
+          changed through Git.
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.userInfo.username }}"
+                operator: NotMatches
+                value: "^system:.*"
