@@ -93,6 +93,10 @@ spec:
                 configMapKeyRef:
                   name: kong-config
                   key: KONG_ADMIN_LISTEN
+            - name: KONG_ADMIN_SSL_CERT
+              value: "/etc/kong/admin/tls.crt"
+            - name: KONG_ADMIN_SSL_CERT_KEY
+              value: "/etc/kong/admin/tls.key"
             - name: KONG_DNS_VALID_TTL
               valueFrom:
                 configMapKeyRef:
@@ -103,6 +107,17 @@ spec:
                 configMapKeyRef:
                   name: kong-config
                   key: KONG_DNS_STALE_TTL
+            - name: KONG_PROXY_SSL_CERT
+              value: "/etc/kong/proxy/tls.crt"
+            - name: KONG_PROXY_SSL_CERT_KEY
+              value: "/etc/kong/proxy/tls.key"
+          volumeMounts:
+            - name: kong-admin-tls
+              mountPath: /etc/kong/admin
+              readOnly: true
+            - name: kong-tls
+              mountPath: /etc/kong/proxy
+              readOnly: true
           readinessProbe:
             exec:
               command:
@@ -126,3 +141,12 @@ spec:
             limits:
               cpu: "500m"
               memory: "1Gi"
+      volumes:
+        - name: kong-admin-tls
+          secret:
+            secretName: kong-admin-tls
+            defaultMode: 0644
+        - name: kong-tls
+          secret:
+            secretName: kong-tls
+            defaultMode: 0644

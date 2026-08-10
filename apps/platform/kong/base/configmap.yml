@@ -7,7 +7,7 @@ data:
   # Kong configuration values shared across environments
   KONG_DATABASE: "postgres"
   KONG_PG_PORT: "5432"
-  KONG_PROXY_LISTEN: "0.0.0.0:8000"
+  KONG_PROXY_LISTEN: "0.0.0.0:8000, 0.0.0.0:8443 ssl"
   KONG_PROXY_ACCESS_LOG: "/dev/stdout"
   KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
   KONG_PROXY_ERROR_LOG: "/dev/stderr"
