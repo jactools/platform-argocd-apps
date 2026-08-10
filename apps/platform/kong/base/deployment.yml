@@ -107,6 +107,16 @@ spec:
                 configMapKeyRef:
                   name: kong-config
                   key: KONG_DNS_STALE_TTL
+            - name: KONG_SSL_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: kong-config
+                  key: KONG_SSL_CERT
+            - name: KONG_SSL_CERT_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: kong-config
+                  key: KONG_SSL_CERT_KEY
           volumeMounts:
             - name: kong-admin-tls
               mountPath: /etc/kong/admin
