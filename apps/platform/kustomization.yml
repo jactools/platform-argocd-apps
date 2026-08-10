@@ -8,7 +8,6 @@ resources:
   - kafka/argocd/kafka-dev.yml
   - trino/argocd/trino-dev.yml
   - redis/argocd/redis-dev.yml
-  - llm/argocd/llm-dev.yml
   - airflow/argocd/airflow-dev.yml
   - docker-registry/argocd/docker-registry-dev.yml
   - pypi-server/argocd/pypi-dev.yml
@@ -57,13 +56,6 @@ patches:
     target:
       kind: Application
       name: platform-redis
-  - patch: |
-      - op: replace
-        path: /spec/source/repoURL
-        value: file:///repos/platform-argocd-apps
-    target:
-      kind: Application
-      name: platform-llm
   - patch: |
       - op: replace
         path: /spec/source/repoURL
