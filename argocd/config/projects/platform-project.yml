@@ -16,6 +16,7 @@ spec:
     - namespace: platform-observability
       server: '*'
     - namespace: platform-redis
+    - namespace: platform-shared
       server: '*'
     - namespace: platform-tls
       server: '*'
