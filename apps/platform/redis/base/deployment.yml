@@ -21,6 +21,17 @@ spec:
         - name: redis
           image: redis:8-alpine
           imagePullPolicy: IfNotPresent
+          env:
+            - name: REDIS_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: REDIS_ADMIN_USERNAME
+            - name: REDIS_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: REDIS_ADMIN_PASSWORD
           command:
             - redis-server
             - /etc/redis/redis.conf
@@ -52,15 +63,21 @@ spec:
               cpu: "250m"
               memory: "256Mi"
           readinessProbe:
-            tcpSocket:
-              port: 6379
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli --tls --cacert /etc/redis/ca/rootCA.pem --user "$REDIS_ADMIN_USERNAME" --pass "$REDIS_ADMIN_PASSWORD" -h localhost -p 6379 ping
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
           livenessProbe:
-            tcpSocket:
-              port: 6379
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli --tls --cacert /etc/redis/ca/rootCA.pem --user "$REDIS_ADMIN_USERNAME" --pass "$REDIS_ADMIN_PASSWORD" -h localhost -p 6379 ping
             initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
