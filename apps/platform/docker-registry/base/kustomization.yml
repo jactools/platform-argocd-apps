@@ -11,6 +11,8 @@ commonLabels:
 
 resources:
   - namespace.yml
+  - configmaps/docker-registry-init-script.yml
+  - jobs/docker-registry-init-job.yml
   - deployment.yml
   - service.yml
   - ingress.yml

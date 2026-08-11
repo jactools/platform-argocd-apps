@@ -7,7 +7,7 @@ label and annotation contract defined in the Environment and Deployment
 Contract (W1).
 
 Usage:
-    python3 scripts/validate_manifests.py [--env dev|test] [--strict] [--help]
+    python3 scripts/validate_manifests.py [--env dev|test|prod] [--strict] [--help]
 
 Checks:
     [L1] Required labels present on all resources
@@ -57,7 +57,7 @@ RUNTIME_ANNOTATIONS = [
     "platform.jaccloud.nl/deployed-at-utc",
 ]
 
-VALID_ENVIRONMENTS = {"dev", "test"}
+VALID_ENVIRONMENTS = {"dev", "test", "prod"}
 VALID_TENANTS = {"platform", "dq", "maas"}
 VALID_MANAGED_BY = {"argocd"}
 
@@ -283,14 +283,16 @@ def check_argocd_app_references(
         destination = spec.get("destination", {}) or {}
 
         # Check project
-        if project not in ("platform", "tenant"):
-            errors.append(f"[L5] Application/{name}: project = '{project}' (expected 'platform' or 'tenant')")
+        if project not in ("platform", "tenant", "dq", "maas"):
+            errors.append(f"[L5] Application/{name}: project = '{project}' (expected 'platform', 'tenant', 'dq', or 'maas')")
 
         # Check destination namespace exists in valid set
         dest_ns = destination.get("namespace", "")
         if dest_ns and dest_ns not in (
             "argocd", "platform-kong", "platform-keycloak", "platform-observability",
-            "platform-tls", "platform-registry", "dq-dev", "dq-test", "maas-dev", "maas-test",
+            "platform-tls", "platform-registry", "platform-airflow", "platform-kafka",
+            "platform-redis", "platform-shared", "platform-trino", "platform-ai-stor",
+            "kyverno", "dq-dev", "dq-test", "maas-dev", "maas-test",
             "platform-docker-registry", "platform-pypi-server",
         ):
             errors.append(f"[L5] Application/{name}: destination namespace = '{dest_ns}' (unexpected)")
@@ -377,7 +379,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--env",
-        choices=["dev", "test"],
+        choices=["dev", "test", "prod"],
         default=None,
         help="Validate only a specific environment overlay",
     )

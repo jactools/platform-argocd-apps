@@ -24,10 +24,10 @@ patches:
         value: docker-registry.dev.jac.dot
       - op: replace
         path: /spec/rules/1/host
-        value: docker-registery.host.dev.jac.dot
+        value: docker-registry.host.dev.jac.dot
       - op: replace
         path: /spec/tls/0/hosts/0
         value: docker-registry.dev.jac.dot
       - op: replace
         path: /spec/tls/1/hosts/0
-        value: docker-registery.host.dev.jac.dot
+        value: docker-registry.host.dev.jac.dot

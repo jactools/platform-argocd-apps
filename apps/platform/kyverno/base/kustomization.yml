@@ -8,6 +8,8 @@ labels:
     pairs:
       platform.jaccloud.nl/managed-by: argocd
       platform.jaccloud.nl/component: kyverno
+      platform.jaccloud.nl/service: kyverno
+      platform.jaccloud.nl/tenant: platform
 
 resources:
   - policies/block-dockerhub-images.yml

@@ -16,7 +16,7 @@ spec:
       secretName: docker-registry-tls
     - hosts:
         - "<HOST_HOST>"
-      secretName: docker-registery-host-tls
+      secretName: docker-registry-tls
   rules:
     - host: "<HOST>"
       http:

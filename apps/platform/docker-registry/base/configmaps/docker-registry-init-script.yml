@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-registry-init-script
+  namespace: platform-registry
+data:
+  generate_secrets.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    log()  { printf '[init] %s\n' "$*" >&2; }
+    info() { printf '[init] ✓ %s\n' "$*" >&2; }
+    warn() { printf '[init] ⚠ %s\n' "$*" >&2; }
+
+    secret_exists() {
+      kubectl get secret docker-registry-tls -n platform-registry >/dev/null 2>&1
+    }
+
+    generate_secret() {
+      local tmp_dir
+      tmp_dir=$(mktemp -d)
+
+      openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+        -subj "/CN=docker-registry.platform-registry.svc.cluster.local" \
+        -addext "subjectAltName=DNS:docker-registry.platform-registry.svc,DNS:docker-registry.platform-registry.svc.cluster.local,DNS:docker-registry.dev.jac.dot,DNS:docker-registry.host.dev.jac.dot,DNS:docker-registry.jacloud.nl" \
+        -keyout "$tmp_dir/tls.key" \
+        -out "$tmp_dir/tls.crt" >/dev/null 2>&1
+
+      kubectl -n platform-registry create secret tls docker-registry-tls \
+        --cert="$tmp_dir/tls.crt" \
+        --key="$tmp_dir/tls.key" \
+        --dry-run=client -o yaml | kubectl apply -f - >/dev/null
+
+      rm -rf "$tmp_dir"
+    }
+
+    main() {
+      log "Starting Docker Registry secret initialization..."
+
+      if secret_exists; then
+        info "Secret platform-registry/docker-registry-tls already exists"
+        return 0
+      fi
+
+      generate_secret
+      info "Created secret platform-registry/docker-registry-tls"
+    }
+
+    main "$@"
