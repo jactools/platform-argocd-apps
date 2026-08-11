@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - ./platform-project.yml
-  - ./tenant-project.yml
+  - ./dq-project.yml
+  - ./maas-project.yml
   - ./platform-bootstrap-dev-applicationset.yml

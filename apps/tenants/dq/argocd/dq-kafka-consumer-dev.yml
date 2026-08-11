@@ -5,7 +5,7 @@ metadata:
   name: tenant-dq-kafka-consumer
   namespace: argocd
 spec:
-  project: tenant
+  project: dq
   source:
     repoURL: file:///repos/dq-made-easy
     targetRevision: feature/dq-prototype

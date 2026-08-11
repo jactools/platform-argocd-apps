@@ -5,7 +5,7 @@ metadata:
   name: tenant-maas-orchestrator
   namespace: argocd
 spec:
-  project: tenant
+  project: maas
   source:
     repoURL: "{{MAAS_REPO_URL}}"
     targetRevision: feature/prototype

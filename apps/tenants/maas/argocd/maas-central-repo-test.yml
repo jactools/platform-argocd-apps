@@ -5,7 +5,7 @@ metadata:
   name: tenant-maas-central-repo-test
   namespace: argocd
 spec:
-  project: tenant
+  project: maas
   source:
     repoURL: "{{MAAS_REPO_URL}}"
     targetRevision: feature/prototype

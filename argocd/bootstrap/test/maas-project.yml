@@ -1,0 +1,20 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: maas
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: metadata-as-a-service tenant workloads
+  sourceRepos:
+    - file:///repos/metadata-as-a-service
+  destinations:
+    - namespace: maas-dev
+      server: '*'
+    - namespace: maas-test
+      server: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
