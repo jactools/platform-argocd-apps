@@ -4,6 +4,32 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 
+selected_env="dev"
+
+resolve_selected_env() {
+	local arg
+	local expect_env_value=false
+
+	for arg in "$@"; do
+		if [[ "$expect_env_value" == true ]]; then
+			selected_env="$arg"
+			return 0
+		fi
+
+		case "$arg" in
+			--env)
+				expect_env_value=true
+				;;
+			--env=*)
+				selected_env="${arg#--env=}"
+				return 0
+				;;
+		esac
+	done
+
+	return 0
+}
+
 should_refresh_argocd_session() {
 	local arg
 	for arg in "$@"; do
@@ -17,10 +43,39 @@ should_refresh_argocd_session() {
 	return 0
 }
 
+resolve_credentials_file() {
+	case "$selected_env" in
+		dev|all|"")
+			if [[ -f "$repo_root/tmp/.credentials.dev" ]]; then
+				echo "$repo_root/tmp/.credentials.dev"
+			else
+				echo "$repo_root/tmp/.credentials"
+			fi
+			;;
+		test)
+			echo "$repo_root/tmp/.credentials.test"
+			;;
+		prod)
+			echo "$repo_root/tmp/.credentials.prod"
+			;;
+		*)
+			echo "ERROR: unsupported --env value for auth refresh: $selected_env" >&2
+			exit 2
+			;;
+	esac
+}
+
 refresh_argocd_session() {
-	local credentials_file="$repo_root/tmp/.credentials"
+	local credentials_file
+	credentials_file="$(resolve_credentials_file)"
 
 	if [[ ! -f "$credentials_file" ]]; then
+		if [[ "$selected_env" == "test" || "$selected_env" == "prod" ]]; then
+			echo "ERROR: missing ArgoCD credentials file for env '$selected_env': $credentials_file" >&2
+			echo "Create the file with argocd_url and argocd_password, or rerun with the matching env." >&2
+			exit 2
+		fi
+
 		return 0
 	fi
 
@@ -47,6 +102,8 @@ refresh_argocd_session() {
 		--grpc-web \
 		--insecure
 }
+
+resolve_selected_env "$@"
 
 if should_refresh_argocd_session "$@"; then
 	refresh_argocd_session
