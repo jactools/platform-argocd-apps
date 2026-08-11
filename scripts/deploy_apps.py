@@ -34,6 +34,11 @@ AUTH_ERROR_MARKERS = (
     "token has invalid claims",
     "token is expired",
 )
+BOOTSTRAP_ERROR_MARKERS = (
+    'configmap "argocd-cm" not found',
+    'configmap argocd-cm not found',
+    'argocd-cm not found',
+)
 
 
 @dataclass(frozen=True)
@@ -57,17 +62,22 @@ def is_auth_error(result: subprocess.CompletedProcess[str]) -> bool:
     return any(marker in combined_output for marker in AUTH_ERROR_MARKERS)
 
 
+def is_bootstrap_missing_error(result: subprocess.CompletedProcess[str]) -> bool:
+    combined_output = f"{result.stdout}\n{result.stderr}"
+    return any(marker in combined_output for marker in BOOTSTRAP_ERROR_MARKERS)
+
+
 def print_auth_error() -> None:
     print(
         "ERROR: ArgoCD authentication session is expired or invalid.",
         file=sys.stderr,
     )
     print(
-        "Retry with --core or refresh your ArgoCD CLI session, then rerun the deploy command.",
+        "Refresh your ArgoCD CLI session, or rerun the command with --core if you explicitly want direct cluster mode.",
         file=sys.stderr,
     )
     print(
-        "Example: ./scripts/argocd_sync.sh --core --scope platform --env dev",
+        "Example: ./scripts/argocd_sync.sh --scope platform --env dev",
         file=sys.stderr,
     )
     print(
@@ -210,12 +220,15 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool) -> No
     print(f"==> Syncing {app.name} ({app.manifest_path.relative_to(repo_root())})")
     result = run_command(sync_command)
     if result.returncode != 0:
-        if is_auth_error(result) and not use_core:
-            if not is_argocd_installed():
+        if is_bootstrap_missing_error(result):
+            print_bootstrap_error()
+            raise SystemExit(2)
+        if is_auth_error(result):
+            if not use_core and not is_argocd_installed():
                 print_bootstrap_error()
                 raise SystemExit(2)
-            print("    ArgoCD session expired; retrying in core mode.")
-            return sync_app(app, prune=prune, wait_timeout=wait_timeout, use_core=True)
+            print_auth_error()
+            raise SystemExit(2)
         stderr = result.stderr.strip()
         stdout = result.stdout.strip()
         if stdout:
@@ -227,12 +240,15 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool) -> No
     wait_command = build_argocd_command(["argocd", "app", "wait", app.name, "--sync", "--health", "--timeout", str(wait_timeout)], use_core)
     result = run_command(wait_command)
     if result.returncode != 0:
-        if is_auth_error(result) and not use_core:
-            if not is_argocd_installed():
+        if is_bootstrap_missing_error(result):
+            print_bootstrap_error()
+            raise SystemExit(2)
+        if is_auth_error(result):
+            if not use_core and not is_argocd_installed():
                 print_bootstrap_error()
                 raise SystemExit(2)
-            print("    ArgoCD session expired while waiting; retrying in core mode.")
-            return sync_app(app, prune=prune, wait_timeout=wait_timeout, use_core=True)
+            print_auth_error()
+            raise SystemExit(2)
         stderr = result.stderr.strip()
         stdout = result.stdout.strip()
         if stdout:
