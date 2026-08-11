@@ -21,6 +21,14 @@ resources:
 # Required platform annotations on workloads
 patches:
   - target:
+      kind: ConfigMap
+      name: kong-config
+    patch: |
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "-2"
+  - target:
       kind: Deployment
     patch: |
       - op: add
@@ -29,6 +37,21 @@ patches:
           platform.jaccloud.nl/target-id: CLUSTER
           platform.jaccloud.nl/workload-kind: service
           platform.jaccloud.nl/maas-register: "true"
+  - target:
+      kind: Deployment
+      name: kong-db
+    patch: |
+      - op: add
+        path: /metadata/annotations/argocd.argoproj.io~1sync-wave
+        value: "-2"
+  - target:
+      kind: Service
+      name: kong-db
+    patch: |
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "-2"
   - target:
       kind: StatefulSet
     patch: |
@@ -47,3 +70,17 @@ patches:
           platform.jaccloud.nl/target-id: CLUSTER
           platform.jaccloud.nl/workload-kind: job
           platform.jaccloud.nl/maas-register: "false"
+  - target:
+      kind: Job
+      name: kong-migrations
+    patch: |
+      - op: add
+        path: /metadata/annotations/argocd.argoproj.io~1sync-wave
+        value: "-1"
+  - target:
+      kind: Deployment
+      name: kong
+    patch: |
+      - op: add
+        path: /metadata/annotations/argocd.argoproj.io~1sync-wave
+        value: "0"
