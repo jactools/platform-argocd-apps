@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-ai-stor
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: ai-stor

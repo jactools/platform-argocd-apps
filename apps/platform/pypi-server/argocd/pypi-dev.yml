@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: file:///repos/platform-argocd-apps
     targetRevision: release/dev
+    path: apps/platform/pypi-server/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-registry
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
