@@ -7,7 +7,7 @@ metadata:
 spec:
   project: dq
   source:
-    repoURL: "{{DQ_MADE_EASY_REPO_URL}}"
+    repoURL: https://github.com/jactools/dq-made-easy.git
     targetRevision: feature/dq-prototype
     path: infra/k8s/overlays/test
   destination:

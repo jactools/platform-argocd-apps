@@ -7,7 +7,7 @@ metadata:
 spec:
   project: maas
   source:
-    repoURL: "{{MAAS_REPO_URL}}"
+    repoURL: file:///repos/metadata-as-a-service
     targetRevision: feature/prototype
     path: k8s/overlays/dev-bff
   destination:
