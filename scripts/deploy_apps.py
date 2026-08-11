@@ -28,6 +28,12 @@ from pathlib import Path
 VALID_SCOPES = {"platform", "tenants", "all"}
 VALID_ENVS = {"dev", "test", "prod", "all"}
 APP_SUFFIXES = {"dev", "test", "prod"}
+AUTH_ERROR_MARKERS = (
+    "Unauthenticated",
+    "invalid session",
+    "token has invalid claims",
+    "token is expired",
+)
 
 
 @dataclass(frozen=True)
@@ -44,6 +50,30 @@ def repo_root() -> Path:
 
 def run_command(command: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, capture_output=True, text=True)
+
+
+def is_auth_error(result: subprocess.CompletedProcess[str]) -> bool:
+    combined_output = f"{result.stdout}\n{result.stderr}"
+    return any(marker in combined_output for marker in AUTH_ERROR_MARKERS)
+
+
+def print_auth_error() -> None:
+    print(
+        "ERROR: ArgoCD authentication session is expired or invalid.",
+        file=sys.stderr,
+    )
+    print(
+        "Refresh your ArgoCD CLI session, then rerun the deploy command.",
+        file=sys.stderr,
+    )
+    print(
+        "Example: argocd login <server> --sso or your repo-specific login flow",
+        file=sys.stderr,
+    )
+    print(
+        "If you already refreshed the session, confirm the CLI points at the right context.",
+        file=sys.stderr,
+    )
 
 
 def require_argocd_cli() -> None:
@@ -149,6 +179,9 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int) -> None:
     print(f"==> Syncing {app.name} ({app.manifest_path.relative_to(repo_root())})")
     result = run_command(sync_command)
     if result.returncode != 0:
+        if is_auth_error(result):
+            print_auth_error()
+            raise SystemExit(2)
         stderr = result.stderr.strip()
         stdout = result.stdout.strip()
         if stdout:
@@ -160,6 +193,9 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int) -> None:
     wait_command = ["argocd", "app", "wait", app.name, "--sync", "--health", "--timeout", str(wait_timeout)]
     result = run_command(wait_command)
     if result.returncode != 0:
+        if is_auth_error(result):
+            print_auth_error()
+            raise SystemExit(2)
         stderr = result.stderr.strip()
         stdout = result.stdout.strip()
         if stdout:
