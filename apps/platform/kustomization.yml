@@ -10,6 +10,9 @@ resources:
   - observability/argocd/observability-dev.yml
   - kafka/argocd/kafka-dev.yml
   - trino/argocd/trino-dev.yml
+  - ai-stor/argocd/ai-stor-dev.yml
+  - ai-stor/argocd/ai-stor-test.yml
+  - ai-stor/argocd/ai-stor-prod.yml
   - redis/argocd/redis-dev.yml
   - airflow/argocd/airflow-dev.yml
   - docker-registry/argocd/docker-registry-dev.yml
@@ -74,6 +77,27 @@ patches:
     target:
       kind: Application
       name: platform-trino
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-ai-stor-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-ai-stor-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-ai-stor-prod
   - patch: |
       - op: replace
         path: /spec/source/repoURL
