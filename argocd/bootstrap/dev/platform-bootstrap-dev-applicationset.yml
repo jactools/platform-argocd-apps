@@ -20,7 +20,7 @@ spec:
     spec:
       project: '{{.spec.project}}'
       source:
-        repoURL: '{{if hasPrefix .path.path "apps/platform/"}}file:///repos/platform-argocd-apps{{else if hasPrefix .path.path "apps/tenants/dq/"}}file:///repos/dq-made-easy{{else if hasPrefix .path.path "apps/tenants/maas/"}}file:///repos/metadata-as-a-service{{end}}'
+        repoURL: '{{.spec.source.repoURL}}'
         targetRevision: '{{.spec.source.targetRevision}}'
         path: '{{.spec.source.path}}'
       destination:

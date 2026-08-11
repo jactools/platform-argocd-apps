@@ -6,7 +6,7 @@ metadata:
 spec:
   project: platform
   source:
-    repoURL: file:///repos/platform-argocd-apps
+    repoURL: https://github.com/jactools/platform-argocd-apps.git
     targetRevision: HEAD
     path: apps/platform/shared/overlays/prod
   destination:

@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: file:///repos/platform-argocd-apps
+    repoURL: https://github.com/jactools/platform-argocd-apps.git
     targetRevision: HEAD
     path: argocd/bootstrap/prod
   destination:
