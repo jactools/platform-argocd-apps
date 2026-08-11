@@ -8,14 +8,4 @@ spec:
   project: platform
   source:
     repoURL: file:///repos/platform-argocd-apps
-    targetRevision: HEAD
-    path: apps/platform/kong/overlays/dev
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: platform-kong
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    targetRevision: release/dev

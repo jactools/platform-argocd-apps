@@ -8,14 +8,4 @@ spec:
   project: platform
   source:
     repoURL: https://github.com/jactools/platform-argocd-apps.git
-    targetRevision: feature/prototype
-    path: apps/platform/docker-registry/overlays/test
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: platform-registry
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    targetRevision: release/test

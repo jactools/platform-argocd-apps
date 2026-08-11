@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: file:///repos/platform-argocd-apps
-    targetRevision: HEAD
+    targetRevision: release/dev
     path: argocd/bootstrap/dev
   destination:
     server: https://kubernetes.default.svc

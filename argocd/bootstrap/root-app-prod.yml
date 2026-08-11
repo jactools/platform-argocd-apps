@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jactools/platform-argocd-apps.git
-    targetRevision: HEAD
+    targetRevision: main
     path: argocd/bootstrap/prod
   destination:
     server: https://kubernetes.default.svc

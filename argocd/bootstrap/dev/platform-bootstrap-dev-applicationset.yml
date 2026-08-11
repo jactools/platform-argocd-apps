@@ -10,7 +10,7 @@ spec:
   generators:
     - git:
         repoURL: file:///repos/platform-argocd-apps
-        revision: HEAD
+        revision: release/dev
         files:
           - path: apps/**/argocd/*-dev.yml
   template:

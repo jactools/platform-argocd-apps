@@ -8,14 +8,4 @@ spec:
   project: dq
   source:
     repoURL: https://github.com/jactools/dq-made-easy.git
-    targetRevision: feature/dq-prototype
-    path: infra/k8s/overlays/test
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: dq-made-easy-test
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    targetRevision: release/test

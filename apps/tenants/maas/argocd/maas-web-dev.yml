@@ -8,14 +8,4 @@ spec:
   project: maas
   source:
     repoURL: file:///repos/metadata-as-a-service
-    targetRevision: feature/prototype
-    path: k8s/overlays/dev-web
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: maas-dev
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    targetRevision: release/dev

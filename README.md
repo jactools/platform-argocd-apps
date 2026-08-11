@@ -81,8 +81,9 @@ that ArgoCD must clone:
 ```
 
 The script loads the matching repo-root env file for the selected environment.
-For `dev`, those env values point at `file:///repos/...` mounts; `test` and
-`prod` use the GitHub repository URLs.
+For `dev`, those env values point at `file:///repos/...` mounts on the
+`release/dev` branch; `test` uses the GitHub repository URLs on
+`release/test`; `prod` uses the GitHub repository URLs on `main`.
 
 The script uses `argocd repo add --upsert` so it can be rerun safely when the
 credentials change. Set
@@ -104,4 +105,6 @@ prod:
 The bootstrap script installs ArgoCD from the upstream manifest, waits for the
 control plane to become available, and then applies the repo-managed root
 ApplicationSet that seeds the AppProjects and generates the repo-managed
-Applications.
+Applications. The bootstrap sources follow the same branch policy: dev uses
+`file:///repos/...` on `release/dev`, test uses the remote Git URL on
+`release/test`, and prod uses the remote Git URL on `main`.

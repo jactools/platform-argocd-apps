@@ -8,7 +8,7 @@ spec:
   project: platform
   source:
     repoURL: "file:///repos/platform-argocd-apps"
-    targetRevision: "feature/prototype"
+    targetRevision: release/test
     path: apps/platform/kyverno/base/vendor
   destination:
     server: https://kubernetes.default.svc

@@ -8,14 +8,4 @@ spec:
   project: dq
   source:
     repoURL: file:///repos/dq-made-easy
-    targetRevision: feature/dq-prototype
-    path: infra/k8s/overlays/dev-kafka-consumer
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: dq-made-easy-dev
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    targetRevision: release/dev

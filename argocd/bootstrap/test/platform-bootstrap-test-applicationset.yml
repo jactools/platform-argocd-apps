@@ -10,7 +10,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/jactools/platform-argocd-apps.git
-        revision: HEAD
+        revision: release/test
         files:
           - path: apps/**/argocd/*-test.yml
   template:

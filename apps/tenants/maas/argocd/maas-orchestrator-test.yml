@@ -8,13 +8,4 @@ spec:
   project: maas
   source:
     repoURL: https://github.com/jactools/metadata-as-a-service.git
-    targetRevision: feature/prototype
-    path: k8s/overlays/test-orchestrator
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: maas-test
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    model: CreateNamespace=true
+    targetRevision: release/test
