@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
   - shared/argocd/shared-dev.yml
+  - shared/argocd/shared-test.yml
+  - shared/argocd/shared-prod.yml
   - keycloak/argocd/keycloak-dev.yml
   - kong/argocd/kong-dev.yml
   - observability/argocd/observability-dev.yml
