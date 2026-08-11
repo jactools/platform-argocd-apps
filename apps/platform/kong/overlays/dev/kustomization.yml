@@ -9,6 +9,11 @@ commonLabels:
 resources:
   - ../../base
 
+images:
+  - name: postgres:17-bookworm
+    newName: docker-registry.dev.jac.dot:5000/jacbeekers/postgres
+    newTag: "17-alpine"
+
 # Dev ingress hostnames and TLS
 patches:
   - target:
