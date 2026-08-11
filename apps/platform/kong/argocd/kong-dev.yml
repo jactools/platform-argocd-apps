@@ -8,7 +8,7 @@ spec:
   project: platform
   source:
     repoURL: file:///repos/platform-argocd-apps
-    targetRevision: feature/prototype
+    targetRevision: HEAD
     path: apps/platform/kong/overlays/dev
   destination:
     server: https://kubernetes.default.svc
