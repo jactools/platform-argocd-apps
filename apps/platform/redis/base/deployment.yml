@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/component: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/component: cache
+    spec:
+      containers:
+        - name: redis
+          image: redis:8-alpine
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REDIS_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: REDIS_ADMIN_USERNAME
+            - name: REDIS_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: REDIS_ADMIN_PASSWORD
+          command:
+            - redis-server
+            - /etc/redis/redis.conf
+          ports:
+            - containerPort: 6379
+              name: redis-tls
+              protocol: TCP
+          volumeMounts:
+            - name: redis-config
+              mountPath: /etc/redis/redis.conf
+              subPath: redis.conf
+              readOnly: true
+            - name: redis-tls
+              mountPath: /etc/redis/tls
+              readOnly: true
+            - name: redis-ca
+              mountPath: /etc/redis/ca
+              readOnly: true
+            - name: redis-acl
+              mountPath: /etc/redis/acl
+              readOnly: true
+            - name: redis-data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli --tls --cacert /etc/redis/ca/rootCA.pem --user "$REDIS_ADMIN_USERNAME" --pass "$REDIS_ADMIN_PASSWORD" -h localhost -p 6379 ping
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli --tls --cacert /etc/redis/ca/rootCA.pem --user "$REDIS_ADMIN_USERNAME" --pass "$REDIS_ADMIN_PASSWORD" -h localhost -p 6379 ping
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: redis-config
+          configMap:
+            name: redis-config
+        - name: redis-tls
+          secret:
+            secretName: redis-tls
+        - name: redis-ca
+          configMap:
+            name: platform-root-ca
+            items:
+              - key: rootCA.pem
+                path: rootCA.pem
+        - name: redis-acl
+          secret:
+            secretName: redis-acl
+        - name: redis-data
+          emptyDir: {}

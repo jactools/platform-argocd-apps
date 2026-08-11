@@ -11,3 +11,9 @@ Thumbs.db
 
 # Generated (should not be committed)
 *-generated.yml
+__pycache__/
+*.pyc
+
+tmp/
+.env.*.local
+

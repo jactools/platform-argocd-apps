@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-shared
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: shared-init

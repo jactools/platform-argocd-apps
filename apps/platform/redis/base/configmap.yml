@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+data:
+  redis.conf: |
+    tls-port 6379
+    port 0
+    tls-cert-file /etc/redis/tls/tls.crt
+    tls-key-file /etc/redis/tls/tls.key
+    tls-ca-cert-file /etc/redis/ca/rootCA.pem
+    tls-auth-clients no
+    appendonly yes
+    maxmemory 256mb
+    maxmemory-policy allkeys-lru
+    aclfile /etc/redis/acl/users.acl

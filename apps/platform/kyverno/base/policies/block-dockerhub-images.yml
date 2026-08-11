@@ -1,0 +1,42 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: block-dockerhub-images
+  annotations:
+    policies.kyverno.io/title: Block Docker Hub Images
+    policies.kyverno.io/category: Platform Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/description: >-
+      Blocks all container images from docker.io (public Docker Hub).
+      All images must be pulled from the local docker-registry or loaded
+      into the cluster via `kind load docker-image`.
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: deny-dockerhub-containers
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kyverno
+                - argocd
+                - ingress-nginx
+                - cert-manager
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - local-path-storage
+      validate:
+        message: "Images from docker.io are forbidden. Use the local docker-registry (docker-registery.host.dev.jac.dot:10443) or load images via `kind load docker-image`."
+        pattern:
+          spec:
+            containers:
+              - image: "!docker.io/*"
+            =(initContainers):
+              - image: "!docker.io/*"

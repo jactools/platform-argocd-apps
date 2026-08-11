@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-bootstrap-dev-appset
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - git:
+        repoURL: file:///repos/platform-argocd-apps
+        revision: HEAD
+        files:
+          - path: apps/**/argocd/*-dev.yml
+  template:
+    metadata:
+      name: '{{.metadata.name}}'
+      namespace: argocd
+    spec:
+      project: '{{.spec.project}}'
+      source:
+        repoURL: '{{.spec.source.repoURL}}'
+        targetRevision: '{{.spec.source.targetRevision}}'
+        path: '{{.spec.source.path}}'
+      destination:
+        server: '{{.spec.destination.server}}'
+        namespace: '{{.spec.destination.namespace}}'
+  templatePatch: |
+    spec:
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          {{- if hasPrefix .metadata.name "platform-shared" }}
+          - RespectIgnoreDifferences=true
+          {{- end }}
+          {{- if hasPrefix .metadata.name "platform-kyverno" }}
+          - ServerSideApply=true
+          {{- end }}

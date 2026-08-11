@@ -12,3 +12,4 @@ spec:
       protocol: TCP
   selector:
     app.kubernetes.io/name: docker-registry
+    app.kubernetes.io/component: registry

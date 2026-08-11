@@ -1,0 +1,20 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dq
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: dq-made-easy tenant workloads
+  sourceRepos:
+    - file:///repos/dq-made-easy
+  destinations:
+    - namespace: dq-dev
+      server: '*'
+    - namespace: dq-test
+      server: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace

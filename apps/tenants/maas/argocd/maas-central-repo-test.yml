@@ -5,9 +5,9 @@ metadata:
   name: tenant-maas-central-repo-test
   namespace: argocd
 spec:
-  project: tenant
+  project: maas
   source:
-    repoURL: "{{MAAS_REPO_URL}}"
+    repoURL: https://github.com/jactools/metadata-as-a-service.git
     targetRevision: feature/prototype
     path: k8s/overlays/test-central-repo
   destination:

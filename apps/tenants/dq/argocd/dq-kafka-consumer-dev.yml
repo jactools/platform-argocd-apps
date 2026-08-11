@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-llm
+  name: tenant-dq-kafka-consumer
   namespace: argocd
 spec:
-  project: platform
+  project: dq
   source:
-    repoURL: "{{ARGOCD_REPO_URL}}"
-    targetRevision: feature/prototype
-    path: apps/platform/llm/overlays/test
+    repoURL: file:///repos/dq-made-easy
+    targetRevision: feature/dq-prototype
+    path: infra/k8s/overlays/dev-kafka-consumer
   destination:
     server: https://kubernetes.default.svc
-    namespace: platform-llm
+    namespace: dq-made-easy-dev
   syncPolicy:
     automated:
       prune: true

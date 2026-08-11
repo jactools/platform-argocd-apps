@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-bootstrap-prod-appset
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - git:
+        repoURL: https://github.com/jactools/platform-argocd-apps.git
+        revision: HEAD
+        files:
+          - path: apps/platform/shared/argocd/shared-prod.yml
+  template:
+    metadata:
+      name: '{{.metadata.name}}'
+      namespace: argocd
+    spec:
+      project: '{{.spec.project}}'
+      source:
+        repoURL: '{{.spec.source.repoURL}}'
+        targetRevision: '{{.spec.source.targetRevision}}'
+        path: '{{.spec.source.path}}'
+      destination:
+        server: '{{.spec.destination.server}}'
+        namespace: '{{.spec.destination.namespace}}'
+  templatePatch: |
+    spec:
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          {{- if hasPrefix .metadata.name "platform-shared" }}
+          - RespectIgnoreDifferences=true
+          {{- end }}

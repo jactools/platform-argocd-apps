@@ -5,9 +5,9 @@ metadata:
   name: tenant-dq-engine
   namespace: argocd
 spec:
-  project: tenant
+  project: dq
   source:
-    repoURL: "{{DQ_MADE_EASY_REPO_URL}}"
+    repoURL: file:///repos/dq-made-easy
     targetRevision: feature/dq-prototype
     path: infra/k8s/overlays/dev-engine
   destination:

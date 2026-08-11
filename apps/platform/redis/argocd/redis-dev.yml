@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-redis
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "file:///repos/platform-argocd-apps"
+    targetRevision: feature/prototype
+    path: apps/platform/redis/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-redis
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

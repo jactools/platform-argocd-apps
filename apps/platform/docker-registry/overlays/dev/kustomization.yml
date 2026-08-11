@@ -3,8 +3,13 @@ kind: Kustomization
 
 namespace: platform-registry
 
-commonLabels:
-  platform.jaccloud.nl/environment: dev
+labels:
+- includeSelectors: true
+  pairs:
+    platform.jaccloud.nl/environment: dev
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: docker-registry
+    platform.jaccloud.nl/tenant: platform
 
 resources:
   - ../../base
@@ -17,3 +22,12 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: docker-registry.dev.jac.dot
+      - op: replace
+        path: /spec/rules/1/host
+        value: docker-registery.host.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: docker-registry.dev.jac.dot
+      - op: replace
+        path: /spec/tls/1/hosts/0
+        value: docker-registery.host.dev.jac.dot

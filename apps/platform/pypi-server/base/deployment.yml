@@ -31,10 +31,21 @@ spec:
             - "-p"
             - "8080"
             - "--disable-fallback"
+            - "--overwrite"
+            - "-a"
+            - "download,list,update"
+            - "-P"
+            - /etc/pypiserver/htpasswd
+            - "--health-endpoint"
+            - /healthz
             - /packages
           volumeMounts:
             - name: packages
               mountPath: /packages
+            - name: auth
+              mountPath: /etc/pypiserver/htpasswd
+              subPath: htpasswd
+              readOnly: true
           resources:
             requests:
               cpu: "10m"
@@ -44,7 +55,7 @@ spec:
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /simple/
+              path: /healthz
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -52,3 +63,6 @@ spec:
       volumes:
         - name: packages
           emptyDir: {}
+        - name: auth
+          secret:
+            secretName: pypi-server-auth

@@ -2,16 +2,43 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+  - shared/argocd/shared-dev.yml
+  - shared/argocd/shared-test.yml
+  - shared/argocd/shared-prod.yml
   - keycloak/argocd/keycloak-dev.yml
   - kong/argocd/kong-dev.yml
   - observability/argocd/observability-dev.yml
   - kafka/argocd/kafka-dev.yml
   - trino/argocd/trino-dev.yml
-  - llm/argocd/llm-dev.yml
+  - redis/argocd/redis-dev.yml
   - airflow/argocd/airflow-dev.yml
-
+  - docker-registry/argocd/docker-registry-dev.yml
+  - pypi-server/argocd/pypi-dev.yml
+  - kyverno/argocd/kyverno-controller-dev.yml
+  - kyverno/argocd/kyverno-policies-dev.yml
 
 patches:
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-shared-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-shared-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-shared-prod
   - patch: |
       - op: replace
         path: /spec/source/repoURL
@@ -53,7 +80,7 @@ patches:
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-llm
+      name: platform-redis
   - patch: |
       - op: replace
         path: /spec/source/repoURL
@@ -61,3 +88,31 @@ patches:
     target:
       kind: Application
       name: platform-airflow
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-docker-registry
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-pypi-server
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kyverno
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kyverno-policies

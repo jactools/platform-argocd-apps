@@ -5,9 +5,9 @@ metadata:
   name: tenant-maas-central-repo
   namespace: argocd
 spec:
-  project: tenant
+  project: maas
   source:
-    repoURL: "{{MAAS_REPO_URL}}"
+    repoURL: file:///repos/metadata-as-a-service
     targetRevision: feature/prototype
     path: k8s/overlays/dev-central-repo
   destination:
