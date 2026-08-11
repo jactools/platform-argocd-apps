@@ -31,6 +31,7 @@ spec:
                 - kube-system
                 - kube-public
                 - kube-node-lease
+                - local-path-storage
       validate:
         message: "Images from docker.io are forbidden. Use the local docker-registry (docker-registery.host.dev.jac.dot:10443) or load images via `kind load docker-image`."
         pattern:

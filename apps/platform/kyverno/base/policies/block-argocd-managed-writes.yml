@@ -39,9 +39,9 @@ spec:
         deny:
           conditions:
             any:
-              - key: "{{ request.userInfo.username }}"
-                operator: NotMatches
-                value: "^system:.*"
+              - key: "{{ starts_with(request.userInfo.username, 'system:') }}"
+                operator: Equals
+                value: false
 
     - name: deny-human-writes-to-managed-namespaced-resources
       match:
@@ -82,9 +82,9 @@ spec:
         deny:
           conditions:
             any:
-              - key: "{{ request.userInfo.username }}"
-                operator: NotMatches
-                value: "^system:.*"
+              - key: "{{ starts_with(request.userInfo.username, 'system:') }}"
+                operator: Equals
+                value: false
 
     - name: deny-human-writes-to-managed-clusterpolicies
       match:
@@ -102,6 +102,6 @@ spec:
         deny:
           conditions:
             any:
-              - key: "{{ request.userInfo.username }}"
-                operator: NotMatches
-                value: "^system:.*"
+              - key: "{{ starts_with(request.userInfo.username, 'system:') }}"
+                operator: Equals
+                value: false
