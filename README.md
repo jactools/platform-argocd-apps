@@ -49,3 +49,17 @@ environments/
 1. Create `apps/tenants/<tenant>/` with the tenant's ArgoCD Applications
 2. Reference the tenant's git repository as the source
 3. Commit and push — ArgoCD will sync automatically
+
+## Deploying apps
+
+Use the deploy helper to sync existing ArgoCD Applications after the manifests
+are committed:
+
+```bash
+venv/bin/python scripts/deploy_apps.py --scope platform --env dev
+venv/bin/python scripts/deploy_apps.py --scope platform --env prod
+venv/bin/python scripts/deploy_apps.py --app platform-shared-prod
+```
+
+The script syncs ArgoCD Applications that already exist in the cluster. It does
+not bootstrap the initial Application CRs.
