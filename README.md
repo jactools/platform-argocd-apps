@@ -56,6 +56,10 @@ Use the deploy helper to sync existing ArgoCD Applications after the manifests
 are committed:
 
 ```bash
+./scripts/argocd_sync.sh --scope platform --env dev
+./scripts/argocd_sync.sh --scope platform --env prod
+./scripts/argocd_sync.sh --app platform-shared-prod
+
 venv/bin/python scripts/deploy_apps.py --scope platform --env dev
 venv/bin/python scripts/deploy_apps.py --scope platform --env prod
 venv/bin/python scripts/deploy_apps.py --app platform-shared-prod
