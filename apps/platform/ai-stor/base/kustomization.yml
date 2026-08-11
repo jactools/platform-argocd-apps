@@ -18,4 +18,10 @@ labels:
   - pairs:
       platform.jaccloud.nl/managed-by: argocd
       platform.jaccloud.nl/service: ai-stor
+      platform.jaccloud.nl/tenant: platform
     includeSelectors: true
+
+commonAnnotations:
+  platform.jaccloud.nl/workload-kind: service
+  platform.jaccloud.nl/maas-register: "true"
+  platform.jaccloud.nl/target-id: "LOCAL"

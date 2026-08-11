@@ -5,3 +5,4 @@ metadata:
   labels:
     platform.jaccloud.nl/managed-by: argocd
     platform.jaccloud.nl/service: ai-stor
+    platform.jaccloud.nl/tenant: platform

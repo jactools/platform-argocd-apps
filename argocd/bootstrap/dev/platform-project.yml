@@ -25,6 +25,8 @@ spec:
       server: '*'
     - namespace: platform-redis
       server: '*'
+    - namespace: platform-ai-stor
+      server: '*'
     - namespace: platform-shared
       server: '*'
     - namespace: platform-registry
