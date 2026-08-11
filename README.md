@@ -70,6 +70,24 @@ venv/bin/python scripts/deploy_apps.py --core --scope platform --env dev
 The script syncs ArgoCD Applications that already exist in the cluster. It does
 not bootstrap the initial Application CRs.
 
+## Registering repositories
+
+Before syncing remote test or prod Applications, register the Git repositories
+that ArgoCD must clone:
+
+```bash
+./scripts/register_argocd_repos.sh --env dev
+```
+
+The script loads the matching repo-root env file for the selected environment.
+For `dev`, those env values point at `file:///repos/...` mounts; `test` and
+`prod` use the GitHub repository URLs.
+
+The script uses `argocd repo add --upsert` so it can be rerun safely when the
+credentials change. Set
+`ARGOCD_REPO_INSECURE_SKIP_SERVER_VERIFICATION=true` only if the Git server
+uses a certificate that ArgoCD cannot verify.
+
 ## Bootstrapping ArgoCD
 
 For a fresh cluster, install ArgoCD first and then apply the bootstrap root app

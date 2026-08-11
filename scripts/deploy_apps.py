@@ -77,6 +77,21 @@ def is_repo_not_found_error(result: subprocess.CompletedProcess[str]) -> bool:
     return any(marker in combined_output for marker in REPO_NOT_FOUND_MARKERS)
 
 
+def print_repo_registration_error(app: AppSpec) -> None:
+    print(
+        f"ERROR: ArgoCD cannot resolve the repository for {app.name}.",
+        file=sys.stderr,
+    )
+    print(
+        "Register the repo in ArgoCD or change the Application source repoURL to a repository ArgoCD can access.",
+        file=sys.stderr,
+    )
+    print(
+        "This script does not use --local for automated syncs because ArgoCD rejects local sync on auto-sync Applications.",
+        file=sys.stderr,
+    )
+
+
 def print_auth_error() -> None:
     print(
         "ERROR: ArgoCD authentication session is expired or invalid.",
@@ -222,23 +237,7 @@ def build_argocd_command(base_command: list[str], use_core: bool) -> list[str]:
     return command
 
 
-def build_local_sync_command(app: AppSpec, prune: bool) -> list[str]:
-    command = [
-        "argocd",
-        "app",
-        "sync",
-        app.name,
-        "--local",
-        str(repo_root()),
-        "--local-repo-root",
-        str(repo_root()),
-    ]
-    if prune:
-        command.append("--prune")
-    return command
-
-
-def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool, local_sync_used: bool = False) -> None:
+def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool) -> None:
     sync_command = build_argocd_command(["argocd", "app", "sync", app.name], use_core)
     if prune:
         sync_command.append("--prune")
@@ -249,20 +248,9 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool, local
         if is_bootstrap_missing_error(result):
             print_bootstrap_error()
             raise SystemExit(2)
-        if is_repo_not_found_error(result) and app.scope == "platform" and not use_core and not local_sync_used:
-            print("    ArgoCD does not have the repository registered; retrying with local mode.")
-            local_command = build_local_sync_command(app, prune=prune)
-            result = run_command(local_command)
-            if result.returncode == 0:
-                local_sync_used = True
-            else:
-                stderr = result.stderr.strip()
-                stdout = result.stdout.strip()
-                if stdout:
-                    print(stdout)
-                if stderr:
-                    print(stderr, file=sys.stderr)
-                raise SystemExit(1)
+        if is_repo_not_found_error(result):
+            print_repo_registration_error(app)
+            raise SystemExit(2)
         if is_auth_error(result):
             if not use_core and not is_argocd_installed():
                 print_bootstrap_error()
@@ -283,24 +271,9 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool, local
         if is_bootstrap_missing_error(result):
             print_bootstrap_error()
             raise SystemExit(2)
-        if is_repo_not_found_error(result) and app.scope == "platform" and not use_core and not local_sync_used:
-            print("    ArgoCD does not have the repository registered; retrying with local mode.")
-            local_command = build_local_sync_command(app, prune=prune)
-            result = run_command(local_command)
-            if result.returncode != 0:
-                stderr = result.stderr.strip()
-                stdout = result.stdout.strip()
-                if stdout:
-                    print(stdout)
-                if stderr:
-                    print(stderr, file=sys.stderr)
-                raise SystemExit(1)
-
-            wait_command = build_argocd_command(["argocd", "app", "wait", app.name, "--sync", "--health", "--timeout", str(wait_timeout)], use_core)
-            result = run_command(wait_command)
-            if result.returncode == 0:
-                print(f"    OK {app.name} is Synced and Healthy")
-                return
+        if is_repo_not_found_error(result):
+            print_repo_registration_error(app)
+            raise SystemExit(2)
         if is_auth_error(result):
             if not use_core and not is_argocd_installed():
                 print_bootstrap_error()
