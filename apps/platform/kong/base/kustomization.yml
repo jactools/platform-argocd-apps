@@ -12,6 +12,7 @@ commonLabels:
 resources:
   - namespace.yml
   - configmap.yml
+  - kong-db-pvc.yml
   - kong-db.yml
   - kong-migrations.yml
   - deployment.yml
@@ -72,7 +73,7 @@ patches:
           platform.jaccloud.nl/maas-register: "false"
   - target:
       kind: Job
-      name: kong-migrations
+      name: kong-migrations-bootstrap
     patch: |
       - op: add
         path: /metadata/annotations/argocd.argoproj.io~1sync-wave

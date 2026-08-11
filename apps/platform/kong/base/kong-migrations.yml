@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kong-migrations
+  name: kong-migrations-bootstrap
 spec:
   template:
     spec:

@@ -204,9 +204,17 @@ def load_application_specs(root: Path) -> list[AppSpec]:
 
 def select_apps(specs: list[AppSpec], scope: str, environment: str, app_names: list[str]) -> list[AppSpec]:
     if app_names:
+        scoped_specs = []
+        for spec in specs:
+            if scope != "all" and spec.scope != scope:
+                continue
+            if environment != "all" and spec.environment != environment:
+                continue
+            scoped_specs.append(spec)
+
         selected: list[AppSpec] = []
         missing: list[str] = []
-        by_name = {spec.name: spec for spec in specs}
+        by_name = {spec.name: spec for spec in scoped_specs}
         for name in app_names:
             spec = by_name.get(name)
             if spec is None:

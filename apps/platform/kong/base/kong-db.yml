@@ -60,7 +60,8 @@ spec:
             timeoutSeconds: 5
       volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: kong-db-data
 ---
 apiVersion: v1
 kind: Service
