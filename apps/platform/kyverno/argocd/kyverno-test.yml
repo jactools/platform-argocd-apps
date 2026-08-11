@@ -1,0 +1,44 @@
+# Kyverno controller (pre-rendered manifests from v1.13.2)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "file:///repos/platform-argocd-apps"
+    targetRevision: "feature/prototype"
+    path: apps/platform/kyverno/base/vendor
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+# Kyverno policies (Kustomize overlay)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno-policies
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "file:///repos/platform-argocd-apps"
+    targetRevision: "feature/prototype"
+    path: apps/platform/kyverno/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

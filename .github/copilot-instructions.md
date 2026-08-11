@@ -17,5 +17,6 @@
 ## Repo-specific reminders
 
 - Refer to [ARGOCD_KUBECTL_WRITE_POLICY.md](../ARGOCD_KUBECTL_WRITE_POLICY.md) for the full policy and break-glass workflow.
+- `scripts/bootstrap_argocd.sh` is the one-time bootstrap exception for installing ArgoCD and applying the root Application to a fresh cluster, including prod.
 - Prefer small, local edits that preserve the existing layout.
 - When changing manifests, check whether the repository validation scripts or sync checks are affected.

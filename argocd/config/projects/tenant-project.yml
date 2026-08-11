@@ -4,6 +4,8 @@ kind: AppProject
 metadata:
   name: tenant
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   description: Tenant workloads (dq, maas, etc.)
   sourceRepos:

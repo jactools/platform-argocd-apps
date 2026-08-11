@@ -63,11 +63,11 @@ def print_auth_error() -> None:
         file=sys.stderr,
     )
     print(
-        "Refresh your ArgoCD CLI session, then rerun the deploy command.",
+        "Retry with --core or refresh your ArgoCD CLI session, then rerun the deploy command.",
         file=sys.stderr,
     )
     print(
-        "Example: argocd login <server> --sso or your repo-specific login flow",
+        "Example: ./scripts/argocd_sync.sh --core --scope platform --env dev",
         file=sys.stderr,
     )
     print(
@@ -82,6 +82,30 @@ def require_argocd_cli() -> None:
         message = result.stderr.strip() or result.stdout.strip() or "argocd CLI is unavailable"
         print(f"ERROR: {message}", file=sys.stderr)
         raise SystemExit(2)
+
+
+def is_argocd_installed() -> bool:
+    result = run_command(["kubectl", "get", "configmap", "argocd-cm", "-n", "argocd"])
+    return result.returncode == 0
+
+
+def print_bootstrap_error() -> None:
+    print(
+        "ERROR: ArgoCD is not installed in the current Kubernetes cluster.",
+        file=sys.stderr,
+    )
+    print(
+        "This deploy helper can only sync existing ArgoCD Applications after the",
+        file=sys.stderr,
+    )
+    print(
+        "ArgoCD control plane has been bootstrapped.",
+        file=sys.stderr,
+    )
+    print(
+        "Run ./scripts/bootstrap_argocd.sh --env dev|test|prod first, then rerun ./scripts/argocd_sync.sh.",
+        file=sys.stderr,
+    )
 
 
 def infer_scope(manifest_path: Path) -> str:
@@ -171,17 +195,27 @@ def select_apps(specs: list[AppSpec], scope: str, environment: str, app_names: l
     return selected
 
 
-def sync_app(app: AppSpec, prune: bool, wait_timeout: int) -> None:
-    sync_command = ["argocd", "app", "sync", app.name]
+def build_argocd_command(base_command: list[str], use_core: bool) -> list[str]:
+    command = list(base_command)
+    if use_core:
+        command.append("--core")
+    return command
+
+
+def sync_app(app: AppSpec, prune: bool, wait_timeout: int, use_core: bool) -> None:
+    sync_command = build_argocd_command(["argocd", "app", "sync", app.name], use_core)
     if prune:
         sync_command.append("--prune")
 
     print(f"==> Syncing {app.name} ({app.manifest_path.relative_to(repo_root())})")
     result = run_command(sync_command)
     if result.returncode != 0:
-        if is_auth_error(result):
-            print_auth_error()
-            raise SystemExit(2)
+        if is_auth_error(result) and not use_core:
+            if not is_argocd_installed():
+                print_bootstrap_error()
+                raise SystemExit(2)
+            print("    ArgoCD session expired; retrying in core mode.")
+            return sync_app(app, prune=prune, wait_timeout=wait_timeout, use_core=True)
         stderr = result.stderr.strip()
         stdout = result.stdout.strip()
         if stdout:
@@ -190,12 +224,15 @@ def sync_app(app: AppSpec, prune: bool, wait_timeout: int) -> None:
             print(stderr, file=sys.stderr)
         raise SystemExit(1)
 
-    wait_command = ["argocd", "app", "wait", app.name, "--sync", "--health", "--timeout", str(wait_timeout)]
+    wait_command = build_argocd_command(["argocd", "app", "wait", app.name, "--sync", "--health", "--timeout", str(wait_timeout)], use_core)
     result = run_command(wait_command)
     if result.returncode != 0:
-        if is_auth_error(result):
-            print_auth_error()
-            raise SystemExit(2)
+        if is_auth_error(result) and not use_core:
+            if not is_argocd_installed():
+                print_bootstrap_error()
+                raise SystemExit(2)
+            print("    ArgoCD session expired while waiting; retrying in core mode.")
+            return sync_app(app, prune=prune, wait_timeout=wait_timeout, use_core=True)
         stderr = result.stderr.strip()
         stdout = result.stdout.strip()
         if stdout:
@@ -244,6 +281,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="List the selected apps without syncing them",
     )
+    parser.add_argument(
+        "--core",
+        action="store_true",
+        help="Use ArgoCD core mode directly against the Kubernetes cluster",
+    )
     return parser
 
 
@@ -252,6 +294,10 @@ def main() -> int:
     args = parser.parse_args()
 
     require_argocd_cli()
+
+    if not args.list and not is_argocd_installed():
+        print_bootstrap_error()
+        return 2
 
     root = repo_root()
     specs = load_application_specs(root)
@@ -270,7 +316,7 @@ def main() -> int:
 
     prune = not args.no_prune
     for app in selected:
-        sync_app(app, prune=prune, wait_timeout=args.wait_timeout)
+        sync_app(app, prune=prune, wait_timeout=args.wait_timeout, use_core=args.core)
 
     return 0
 

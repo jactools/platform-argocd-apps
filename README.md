@@ -20,7 +20,7 @@ apps/
     └── maas/
 
 argocd/
-├── install.yml        # ArgoCD installation manifests
+├── bootstrap/      # One-time ArgoCD bootstrap root apps and kustomizations
 └── config/
     └── projects/      # ArgoCD Project definitions
 
@@ -59,11 +59,28 @@ are committed:
 ./scripts/argocd_sync.sh --scope platform --env dev
 ./scripts/argocd_sync.sh --scope platform --env prod
 ./scripts/argocd_sync.sh --app platform-shared-prod
+./scripts/argocd_sync.sh --core --scope platform --env dev
 
 venv/bin/python scripts/deploy_apps.py --scope platform --env dev
 venv/bin/python scripts/deploy_apps.py --scope platform --env prod
 venv/bin/python scripts/deploy_apps.py --app platform-shared-prod
+venv/bin/python scripts/deploy_apps.py --core --scope platform --env dev
 ```
 
 The script syncs ArgoCD Applications that already exist in the cluster. It does
 not bootstrap the initial Application CRs.
+
+## Bootstrapping ArgoCD
+
+For a fresh cluster, install ArgoCD first and then apply the bootstrap root app
+for the target environment:
+
+```bash
+./scripts/bootstrap_argocd.sh --env dev
+./scripts/bootstrap_argocd.sh --env test
+./scripts/bootstrap_argocd.sh --env prod
+```
+
+The bootstrap script installs ArgoCD from the upstream manifest, waits for the
+control plane to become available, and then applies the repo-managed root
+Application that seeds the AppProjects and application set.
