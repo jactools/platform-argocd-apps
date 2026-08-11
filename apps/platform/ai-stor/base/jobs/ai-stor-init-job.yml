@@ -37,6 +37,9 @@ kind: ServiceAccount
 metadata:
   name: ai-stor-init-sa
   namespace: platform-ai-stor
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -44,6 +47,9 @@ kind: Role
 metadata:
   name: ai-stor-init-role
   namespace: platform-ai-stor
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -55,6 +61,9 @@ kind: RoleBinding
 metadata:
   name: ai-stor-init-binding
   namespace: platform-ai-stor
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
