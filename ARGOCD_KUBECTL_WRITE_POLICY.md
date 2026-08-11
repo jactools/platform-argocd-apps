@@ -21,9 +21,9 @@ From [argocd/config/projects/platform-project.yml](argocd/config/projects/platfo
 - `platform-tls`
 - `kyverno`
 
-### Tenant project
+### Tenant projects
 
-From [argocd/config/projects/tenant-project.yml](argocd/config/projects/tenant-project.yml):
+From [argocd/config/projects/dq-project.yml](argocd/config/projects/dq-project.yml) and [argocd/config/projects/maas-project.yml](argocd/config/projects/maas-project.yml):
 
 - `dq-dev`
 - `dq-test`

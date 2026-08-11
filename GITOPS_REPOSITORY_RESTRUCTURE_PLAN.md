@@ -33,7 +33,8 @@ argocd/
     root-app-test.yml
   projects/
     platform-project.yml
-    tenant-project.yml
+    dq-project.yml
+    maas-project.yml
   applications/
     dev/
       platform/
@@ -97,7 +98,7 @@ Make this repository the canonical home of the root applications and AppProjects
 - [ ] Add `root-app-dev.yml`
 - [ ] Add `root-app-test.yml`
 - [ ] Move or recreate canonical `platform-project.yml` under `argocd/projects/`
-- [ ] Move or recreate canonical `tenant-project.yml` under `argocd/projects/`
+- [ ] Move or recreate canonical `dq-project.yml` and `maas-project.yml` under `argocd/projects/`
 - [ ] Add kustomization or aggregation manifests needed by the root apps
 - [ ] Document the expected bootstrap path for dev and test
 
