@@ -1,6 +1,6 @@
 # Platform ArgoCD Applications
 
-This repository contains all ArgoCD Application definitions for the platform-foundation Kind clusters.
+This repository contains the ArgoCD bootstrap and Application definitions for the platform-foundation environments.
 
 ## Plans
 
@@ -35,6 +35,7 @@ environments/
 |---|---|---|---|
 | dev | Kind (local) | `apps/*/overlays/dev/` | Auto |
 | test | Kind (Debian) | `apps/*/overlays/test/` | Auto |
+| prod | Bootstrap / remote source | no local overlay; repo-managed root app + GitHub sources | Auto |
 
 ## Adding a new platform service
 
@@ -91,7 +92,8 @@ uses a certificate that ArgoCD cannot verify.
 ## Bootstrapping ArgoCD
 
 For a fresh cluster, install ArgoCD first and then apply the bootstrap root app
-for the target environment:
+for the target environment. The repo now carries root apps for dev, test, and
+prod:
 
 ```bash
 ./scripts/bootstrap_argocd.sh --env dev
