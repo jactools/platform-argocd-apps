@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: file:///repos/platform-argocd-apps
     targetRevision: release/dev
+    path: apps/platform/keycloak/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-keycloak
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

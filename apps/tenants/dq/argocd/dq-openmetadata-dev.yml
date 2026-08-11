@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: file:///repos/dq-made-easy
     targetRevision: release/dev
+    path: dq-openmetadata/k8s/argocd/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dq-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

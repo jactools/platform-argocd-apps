@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ai-stor-secret-init
+  namespace: platform-ai-stor
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: ai-stor
+spec:
+  template:
+    metadata:
+      labels:
+        platform.jaccloud.nl/managed-by: argocd
+        platform.jaccloud.nl/service: ai-stor
+    spec:
+      serviceAccountName: ai-stor-init-sa
+      containers:
+      - name: generate-secrets
+        image: bitnami/kubectl:latest
+        command: ["/bin/bash", "/scripts/generate_secrets.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+      restartPolicy: Never
+      volumes:
+      - name: scripts
+        configMap:
+          name: ai-stor-init-script
+          defaultMode: 0755
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ai-stor-init-sa
+  namespace: platform-ai-stor
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ai-stor-init-role
+  namespace: platform-ai-stor
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "create", "update", "patch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ai-stor-init-binding
+  namespace: platform-ai-stor
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ai-stor-init-role
+subjects:
+- kind: ServiceAccount
+  name: ai-stor-init-sa
+  namespace: platform-ai-stor

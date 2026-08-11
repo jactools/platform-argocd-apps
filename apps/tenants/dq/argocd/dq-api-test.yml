@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: https://github.com/jactools/dq-made-easy.git
     targetRevision: release/test
+    path: dq-api/k8s/argocd/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dq-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

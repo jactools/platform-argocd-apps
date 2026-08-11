@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: https://github.com/jactools/metadata-as-a-service.git
     targetRevision: release/test
+    path: packages/metadata-scenario-catalog/interface/api/argocd/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: maas-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

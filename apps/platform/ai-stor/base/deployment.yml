@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-stor
+  labels:
+    app.kubernetes.io/name: ai-stor
+    app.kubernetes.io/part-of: platform-foundation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-stor
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ai-stor
+        app.kubernetes.io/part-of: platform-foundation
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/minio/v2/metrics/cluster"
+        prometheus.io/port: "9000"
+    spec:
+      volumes:
+        - name: ai-stor-data
+          persistentVolumeClaim:
+            claimName: ai-stor-data
+        - name: ai-stor-tls
+          secret:
+            secretName: ai-stor-tls
+        - name: ai-stor-truststore
+          configMap:
+            name: platform-root-ca
+      containers:
+        - name: minio
+          image: quay.io/minio/minio:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+            - -c
+            - >-
+              minio server /data --console-address :9001 --certs-dir /certs
+          ports:
+            - containerPort: 9000
+              name: api
+              protocol: TCP
+            - containerPort: 9001
+              name: console
+              protocol: TCP
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ai-stor-credentials
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ai-stor-credentials
+                  key: MINIO_ROOT_PASSWORD
+            - name: MINIO_SERVER_URL
+              value: "https://ai-stor.platform-ai-stor.svc.cluster.local:9000"
+            - name: MINIO_BROWSER_REDIRECT_URL
+              value: "https://ai-stor-console.platform-ai-stor.svc.cluster.local:9001"
+          envFrom:
+            - configMapRef:
+                name: ai-stor-config
+          volumeMounts:
+            - name: ai-stor-data
+              mountPath: /data
+            - name: ai-stor-tls
+              mountPath: /certs
+            - name: ai-stor-truststore
+              mountPath: /etc/ssl/certs/platform-root-ca.pem
+              subPath: rootCA.pem
+              readOnly: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          readinessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: api
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: api
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3

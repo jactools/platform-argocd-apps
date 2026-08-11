@@ -5,12 +5,17 @@ namespace: platform-ai-stor
 
 resources:
   - namespace.yml
+  - configmaps/ai-stor-init-script.yml
+  - jobs/ai-stor-init-job.yml
+  - ingress/kong-routes-reference.yml
   - deployment.yml
   - service.yml
   - headless-service.yml
   - configmap.yml
   - pvc.yml
 
-commonLabels:
-  platform.jaccloud.nl/managed-by: argocd
-  platform.jaccloud.nl/service: ai-stor
+labels:
+  - pairs:
+      platform.jaccloud.nl/managed-by: argocd
+      platform.jaccloud.nl/service: ai-stor
+    includeSelectors: true

@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tenant-dq-engine
+  name: platform-ai-stor-test
   namespace: argocd
 spec:
-  project: dq
+  project: platform
   source:
-    repoURL: https://github.com/jactools/dq-made-easy.git
+    repoURL: file:///repos/platform-argocd-apps
     targetRevision: release/test
-    path: dq-engine/k8s/argocd/test
+    path: apps/platform/ai-stor/overlays/test
   destination:
     server: https://kubernetes.default.svc
-    namespace: dq-test
+    namespace: platform-ai-stor
   syncPolicy:
     automated:
       prune: true

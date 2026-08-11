@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tenant-maas-orchestrator
+  name: platform-ai-stor-dev
   namespace: argocd
 spec:
-  project: maas
+  project: platform
   source:
-    repoURL: file:///repos/metadata-as-a-service
+    repoURL: file:///repos/platform-argocd-apps
     targetRevision: release/dev
-    path: packages/metadata-orchestrator/interface/api/argocd/dev
+    path: apps/platform/ai-stor/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: maas-dev
+    namespace: platform-ai-stor
   syncPolicy:
     automated:
       prune: true

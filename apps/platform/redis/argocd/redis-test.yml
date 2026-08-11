@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: "file:///repos/platform-argocd-apps"
     targetRevision: release/test
+    path: apps/platform/redis/overlays/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-redis
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

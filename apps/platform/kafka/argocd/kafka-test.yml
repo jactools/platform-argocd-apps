@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: https://github.com/jactools/platform-argocd-apps.git
     targetRevision: release/test
+    path: apps/platform/kafka/overlays/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-kafka
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

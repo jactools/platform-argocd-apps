@@ -9,3 +9,13 @@ spec:
   source:
     repoURL: file:///repos/metadata-as-a-service
     targetRevision: release/dev
+    path: packages/metadata-scenario-catalog/interface/api/argocd/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: maas-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

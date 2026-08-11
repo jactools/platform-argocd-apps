@@ -1,0 +1,38 @@
+# ============================================================================
+# AIStor/MinIO Kong Route Definitions
+# ============================================================================
+# These routes should be added to `scripts/bootstrap_kong.sh` or managed
+# via a Kong Ingress Controller if adopted later.
+#
+# Service: ai-stor.platform-ai-stor.svc.cluster.local
+# Ports: 9000 (API), 9001 (Console)
+# ============================================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-stor-kong-routes-reference
+  namespace: platform-ai-stor
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: ai-stor
+    kong-route-reference: "true"
+data:
+  # MinIO API Route
+  api-route-name: "ai-stor-api"
+  api-host: "ai-stor.dev.jac.dot"  # Adjust per env overlay
+  api-path: "/*"
+  api-upstream: "https://ai-stor.platform-ai-stor.svc.cluster.local:9000"
+  api-protocols: "https"
+
+  # MinIO Console Route
+  console-route-name: "ai-stor-console"
+  console-host: "ai-stor-console.dev.jac.dot"  # Adjust per env overlay
+  console-path: "/"
+  console-upstream: "https://ai-stor.platform-ai-stor.svc.cluster.local:9001"
+  console-protocols: "https"
+  console-protocols-allow: "https"
+
+  # OIDC/Keycloak SSO placeholders (if enabling Console SSO)
+  keycloak-client-id: "ai-stor-console"
+  keycloak-realm: "platform"

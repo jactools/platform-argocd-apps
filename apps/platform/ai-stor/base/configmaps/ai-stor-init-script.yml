@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-stor-init-script
+  namespace: platform-ai-stor
+data:
+  generate_secrets.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    log()  { printf '[init] %s\n' "$*" >&2; }
+    info() { printf '[init] ✓ %s\n' "$*" >&2; }
+    warn() { printf '[init] ⚠ %s\n' "$*" >&2; }
+    err()  { printf '[init] ✗ %s\n' "$*" >&2; }
+
+    get_or_gen_password() {
+      local secret_name="$1"
+      local key="$2"
+      local existing
+      existing=$(kubectl get secret "$secret_name" -n platform-ai-stor -o jsonpath="{.data.$key}" 2>/dev/null | base64 -d 2>/dev/null || true)
+      if [[ -n "$existing" ]]; then
+        echo "$existing"
+      else
+        openssl rand -base64 32
+      fi
+    }
+
+    apply_secret() {
+      local name="$1"
+      local namespace="$2"
+      shift 2
+      local literals=("$@")
+
+      local cmd="kubectl -n $namespace create secret generic $name"
+      for lit in "${literals[@]}"; do
+        cmd="$cmd --from-literal=$lit"
+      done
+      cmd="$cmd --dry-run=client -o yaml | kubectl apply -f -"
+
+      if eval "$cmd" 2>/dev/null; then
+        info "Created/updated secret $namespace/$name"
+      else
+        warn "Failed to create/update secret $namespace/$name"
+      fi
+    }
+
+    main() {
+      log "Starting AIStor/MinIO secret initialization..."
+
+      local minio_root_user="admin"
+      local minio_root_password
+      minio_root_password=$(get_or_gen_password "ai-stor-credentials" "MINIO_ROOT_PASSWORD")
+
+      apply_secret ai-stor-credentials platform-ai-stor \
+        "MINIO_ROOT_USER=$minio_root_user" \
+        "MINIO_ROOT_PASSWORD=$minio_root_password"
+
+      info "AIStor/MinIO secrets initialized"
+    }
+
+    main "$@"

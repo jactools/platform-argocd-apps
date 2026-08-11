@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-stor-config
+  labels:
+    app.kubernetes.io/name: ai-stor
+    app.kubernetes.io/part-of: platform-foundation
+data:
+  MINIO_VOLUMES: "/data"
+  MINIO_OPTS: "--console-address :9001"
