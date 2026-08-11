@@ -19,8 +19,15 @@ spec:
       server: '*'
     - namespace: platform-observability
       server: '*'
+    - namespace: platform-kafka
+      server: '*'
+    - namespace: platform-trino
+      server: '*'
     - namespace: platform-redis
+      server: '*'
     - namespace: platform-shared
+      server: '*'
+    - namespace: platform-registry
       server: '*'
     - namespace: platform-tls
       server: '*'
