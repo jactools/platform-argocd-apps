@@ -56,12 +56,29 @@ if [[ ! -f "$root_app" ]]; then
 fi
 
 echo "==> Installing ArgoCD from $install_url"
-kubectl apply -n argocd -f "$install_url"
+kubectl apply --server-side --force-conflicts -n argocd -f "$install_url"
+
+wait_for_argocd_workloads() {
+  local workload_type
+  local resource_name
+
+  for workload_type in deployment statefulset; do
+    while IFS= read -r resource_name; do
+      [[ -z "$resource_name" ]] && continue
+      case "$workload_type" in
+        deployment)
+          kubectl wait --for=condition=Available "$resource_name" -n argocd --timeout=300s
+          ;;
+        statefulset)
+          kubectl wait --for=condition=Ready "$resource_name" -n argocd --timeout=300s
+          ;;
+      esac
+    done < <(kubectl get "$workload_type" -n argocd -l app.kubernetes.io/part-of=argocd -o name)
+  done
+}
 
 echo "==> Waiting for ArgoCD control plane"
-kubectl wait --for=condition=Available deployment/argocd-server -n argocd --timeout=300s
-kubectl wait --for=condition=Available deployment/argocd-repo-server -n argocd --timeout=300s
-kubectl wait --for=condition=Available deployment/argocd-application-controller -n argocd --timeout=300s
+wait_for_argocd_workloads
 
 if kubectl -n argocd get configmap argocd-cm >/dev/null 2>&1; then
   echo "==> ArgoCD configmap is present"
