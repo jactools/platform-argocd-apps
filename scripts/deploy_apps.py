@@ -73,7 +73,7 @@ def print_auth_error() -> None:
         file=sys.stderr,
     )
     print(
-        "Refresh your ArgoCD CLI session, or rerun the command with --core if you explicitly want direct cluster mode.",
+        "Rerun ./scripts/argocd_sync.sh so the shell wrapper can refresh from tmp/.credentials, or use --core for direct cluster mode.",
         file=sys.stderr,
     )
     print(
