@@ -6,4 +6,4 @@ resources:
   - ./tenant-project.yml
 
   # Platform applications
-  - ../../apps/platform/shared/argocd/shared-prod.yml
+  - ../../../apps/platform/shared/argocd/shared-prod.yml

@@ -6,29 +6,29 @@ resources:
   - ./tenant-project.yml
 
   # Platform applications
-  - ../../apps/platform/shared/argocd/shared-test.yml
-  - ../../apps/platform/keycloak/argocd/keycloak-test.yml
-  - ../../apps/platform/kong/argocd/kong-test.yml
-  - ../../apps/platform/observability/argocd/observability-test.yml
-  - ../../apps/platform/kafka/argocd/kafka-test.yml
-  - ../../apps/platform/trino/argocd/trino-test.yml
-  - ../../apps/platform/redis/argocd/redis-test.yml
-  - ../../apps/platform/airflow/argocd/airflow-test.yml
-  - ../../apps/platform/docker-registry/argocd/docker-registry-test.yml
-  - ../../apps/platform/pypi-server/argocd/pypi-test.yml
-  - ../../apps/platform/kyverno/argocd/kyverno-test.yml
+  - ../../../apps/platform/shared/argocd/shared-test.yml
+  - ../../../apps/platform/keycloak/argocd/keycloak-test.yml
+  - ../../../apps/platform/kong/argocd/kong-test.yml
+  - ../../../apps/platform/observability/argocd/observability-test.yml
+  - ../../../apps/platform/kafka/argocd/kafka-test.yml
+  - ../../../apps/platform/trino/argocd/trino-test.yml
+  - ../../../apps/platform/redis/argocd/redis-test.yml
+  - ../../../apps/platform/airflow/argocd/airflow-test.yml
+  - ../../../apps/platform/docker-registry/argocd/docker-registry-test.yml
+  - ../../../apps/platform/pypi-server/argocd/pypi-test.yml
+  - ../../../apps/platform/kyverno/argocd/kyverno-test.yml
 
   # DQ tenant applications
-  - ../../apps/tenants/dq/argocd/dq-api-test.yml
-  - ../../apps/tenants/dq/argocd/dq-engine-test.yml
-  - ../../apps/tenants/dq/argocd/dq-ui-test.yml
+  - ../../../apps/tenants/dq/argocd/dq-api-test.yml
+  - ../../../apps/tenants/dq/argocd/dq-engine-test.yml
+  - ../../../apps/tenants/dq/argocd/dq-ui-test.yml
 
   # MaaS tenant applications
-  - ../../apps/tenants/maas/argocd/maas-api-test.yml
-  - ../../apps/tenants/maas/argocd/maas-bff-test.yml
-  - ../../apps/tenants/maas/argocd/maas-central-repo-test.yml
-  - ../../apps/tenants/maas/argocd/maas-control-plane-test.yml
-  - ../../apps/tenants/maas/argocd/maas-coordinator-test.yml
-  - ../../apps/tenants/maas/argocd/maas-orchestrator-test.yml
-  - ../../apps/tenants/maas/argocd/maas-scenario-catalog-test.yml
-  - ../../apps/tenants/maas/argocd/maas-web-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-api-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-bff-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-central-repo-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-control-plane-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-coordinator-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-orchestrator-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-scenario-catalog-test.yml
+  - ../../../apps/tenants/maas/argocd/maas-web-test.yml
