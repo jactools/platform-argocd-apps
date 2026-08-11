@@ -13,6 +13,8 @@ spec:
       server: '*'
     - namespace: platform-keycloak
       server: '*'
+    - namespace: platform-airflow
+      server: '*'
     - namespace: platform-observability
       server: '*'
     - namespace: platform-redis
