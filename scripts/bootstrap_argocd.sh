@@ -59,21 +59,32 @@ echo "==> Installing ArgoCD from $install_url"
 kubectl apply --server-side --force-conflicts -n argocd -f "$install_url"
 
 wait_for_argocd_workloads() {
-  local workload_type
-  local resource_name
+  local resource_names=()
+  local attempt=0
 
-  for workload_type in deployment statefulset; do
-    while IFS= read -r resource_name; do
-      [[ -z "$resource_name" ]] && continue
-      case "$workload_type" in
-        deployment)
-          kubectl wait --for=condition=Available "$resource_name" -n argocd --timeout=300s
-          ;;
-        statefulset)
-          kubectl wait --for=condition=Ready "$resource_name" -n argocd --timeout=300s
-          ;;
-      esac
-    done < <(kubectl get "$workload_type" -n argocd -l app.kubernetes.io/part-of=argocd -o name)
+  while [[ $attempt -lt 60 ]]; do
+    mapfile -t resource_names < <(
+      kubectl get deployment,statefulset \
+        -n argocd \
+        -l app.kubernetes.io/part-of=argocd \
+        -o name 2>/dev/null || true
+    )
+
+    if [[ ${#resource_names[@]} -gt 0 ]]; then
+      break
+    fi
+
+    attempt=$((attempt + 1))
+    sleep 5
+  done
+
+  if [[ ${#resource_names[@]} -eq 0 ]]; then
+    echo "ERROR: no ArgoCD workloads appeared in the argocd namespace" >&2
+    return 1
+  fi
+
+  for resource_name in "${resource_names[@]}"; do
+    kubectl rollout status "$resource_name" -n argocd --timeout=300s
   done
 }
 
