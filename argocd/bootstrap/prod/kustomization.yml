@@ -4,6 +4,4 @@ kind: Kustomization
 resources:
   - ./platform-project.yml
   - ./tenant-project.yml
-
-  # Platform applications
-  - ../../../apps/platform/shared/argocd/shared-prod.yml
+  - ./platform-bootstrap-prod-applicationset.yml

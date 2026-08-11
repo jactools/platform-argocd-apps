@@ -83,4 +83,5 @@ for the target environment:
 
 The bootstrap script installs ArgoCD from the upstream manifest, waits for the
 control plane to become available, and then applies the repo-managed root
-Application that seeds the AppProjects and application set.
+ApplicationSet that seeds the AppProjects and generates the repo-managed
+Applications.

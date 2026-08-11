@@ -1,0 +1,21 @@
+# Kyverno policies (Kustomize overlay)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno-policies
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: "file:///repos/platform-argocd-apps"
+    targetRevision: "feature/prototype"
+    path: apps/platform/kyverno/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -14,7 +14,8 @@ resources:
   - airflow/argocd/airflow-dev.yml
   - docker-registry/argocd/docker-registry-dev.yml
   - pypi-server/argocd/pypi-dev.yml
-  - kyverno/argocd/kyverno-dev.yml
+  - kyverno/argocd/kyverno-controller-dev.yml
+  - kyverno/argocd/kyverno-policies-dev.yml
 
 patches:
   - patch: |
