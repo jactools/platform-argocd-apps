@@ -11,7 +11,7 @@ resources:
 
 images:
   - name: postgres:17-bookworm
-    newName: docker-registry.dev.jac.dot:5000/jacbeekers/postgres
+    newName: docker-registery.host.dev.jac.dot:10443/jacbeekers/postgres
     newTag: "17-alpine"
 
 # Dev ingress hostnames and TLS
