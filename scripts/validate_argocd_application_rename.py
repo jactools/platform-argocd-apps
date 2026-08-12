@@ -8,7 +8,7 @@ Applications are healthy.
 
 Usage:
     python scripts/validate_argocd_application_rename.py --env dev
-    python scripts/validate_argocd_application_rename.py --env test --strict
+    python scripts/validate_argocd_application_rename.py --env test
     python scripts/validate_argocd_application_rename.py --env dev --summary-only
 
 Exit codes:
@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 import subprocess
 import sys
 
@@ -38,12 +39,43 @@ RENAMED_BASE_NAMES = (
 )
 
 
+def repo_root() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
 def run_kubectl(args: list[str], kubeconfig: str | None) -> subprocess.CompletedProcess[str]:
     cmd = ["kubectl"]
     if kubeconfig:
         cmd.append(f"--kubeconfig={kubeconfig}")
     cmd.extend(args)
     return subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+
+
+def load_env_file(environment: str) -> dict[str, str]:
+    env_file = repo_root() / f".env.{environment}.local"
+    if not env_file.exists():
+        return {}
+
+    values: dict[str, str] = {}
+    for raw_line in env_file.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        values[key.strip()] = value.strip()
+    return values
+
+
+def resolve_kubeconfig(environment: str, cli_kubeconfig: str | None) -> str | None:
+    if cli_kubeconfig:
+        return cli_kubeconfig
+
+    env_values = load_env_file(environment)
+    kubeconfig = env_values.get("KUBECONFIG", "").strip()
+    if kubeconfig:
+        return kubeconfig
+
+    return None
 
 
 def get_argocd_apps(kubeconfig: str | None) -> list[dict]:
@@ -111,20 +143,28 @@ def print_list(title: str, items: list[str]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify the ArgoCD Application rename cutover for one environment")
     parser.add_argument("--env", choices=("dev", "test"), required=True, help="Environment to verify")
-    parser.add_argument("--kubeconfig", default=None, help="Path to kubeconfig file (default: current kubectl context)")
+    parser.add_argument(
+        "--kubeconfig",
+        default=None,
+        help="Optional kubeconfig override (default: KUBECONFIG from .env.<env>.local, then current kubectl context)",
+    )
     parser.add_argument("--summary-only", action="store_true", help="Only print the summary counts")
     args = parser.parse_args()
 
-    print(f"=== ArgoCD Application rename validation (env={args.env}) ===\n")
+    kubeconfig = resolve_kubeconfig(args.env, args.kubeconfig)
 
-    probe = run_kubectl(["cluster-info"], args.kubeconfig)
+    print(f"=== ArgoCD Application rename validation (env={args.env}) ===\n")
+    if kubeconfig:
+        print(f"Using kubeconfig: {kubeconfig}\n")
+
+    probe = run_kubectl(["cluster-info"], kubeconfig)
     if probe.returncode != 0:
         message = probe.stderr.strip() or probe.stdout.strip() or "cluster unreachable"
         print(f"ERROR: cannot connect to cluster: {message}", file=sys.stderr)
         return 2
 
     try:
-        apps = get_argocd_apps(args.kubeconfig)
+        apps = get_argocd_apps(kubeconfig)
     except RuntimeError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2

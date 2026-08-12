@@ -128,12 +128,13 @@ Use the helper script to verify that the new suffixed names exist and the old
 unsuffixed names are gone:
 
 ```bash
-KUBECONFIG=/path/to/kubeconfig \
-	./scripts/python_arm64.sh scripts/validate_argocd_application_rename.py --env dev
+./scripts/python_arm64.sh scripts/validate_argocd_application_rename.py --env dev
 
-KUBECONFIG=/path/to/kubeconfig \
-	./scripts/python_arm64.sh scripts/validate_argocd_application_rename.py --env test
+./scripts/python_arm64.sh scripts/validate_argocd_application_rename.py --env test
 ```
+
+The helper reads `KUBECONFIG` from the matching `.env.<env>.local` file by default.
+Use `--kubeconfig` only when you need to override that path.
 
 ## Fallback path if automatic pruning does not happen
 
