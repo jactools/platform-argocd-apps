@@ -34,9 +34,9 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          {{- if hasPrefix .metadata.name "platform-shared" }}
+          {{- if hasPrefix "platform-shared" .metadata.name }}
           - RespectIgnoreDifferences=true
           {{- end }}
-          {{- if hasPrefix .metadata.name "platform-kyverno" }}
+          {{- if hasPrefix "platform-kyverno" .metadata.name }}
           - ServerSideApply=true
           {{- end }}
