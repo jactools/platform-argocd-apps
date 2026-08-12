@@ -11,6 +11,8 @@ commonLabels:
 
 resources:
   - namespace.yml
+  - configmaps/pypi-init-script.yml
+  - jobs/pypi-init-job.yml
   - deployment.yml
   - service.yml
   - ingress.yml
