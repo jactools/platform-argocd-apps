@@ -16,9 +16,4 @@ __pycache__/
 
 tmp/
 .env.*.local
-runtime/registries/*.env
-!runtime/registries/*.env.example
-runtime/registries/state/
-runtime/registries/certs/
-runtime/registries/secrets/
 

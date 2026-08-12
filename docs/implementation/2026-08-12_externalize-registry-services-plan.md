@@ -7,6 +7,8 @@
 
 Move `docker-registry` and `pypi-server` out of the Kubernetes clusters and run them as externally managed Docker containers. After the cutover, the clusters should consume both services as stable external dependencies rather than hosting them as ArgoCD-managed workloads.
 
+Ownership note: the external runtime now lives in `platform-foundation`. This repository retains only the cluster-facing contract and GitOps cleanup work.
+
 ## Scope
 
 In scope:
@@ -107,6 +109,11 @@ Define the new operational home for both services before changing GitOps.
 
 Both services can be started, restarted, backed up, and monitored without Kubernetes.
 
+Ownership outcome:
+
+- runtime implementation should live in `platform-foundation`
+- this repository should retain only the cluster-facing contract
+
 ## Workstream 2: Networking and endpoint cutover
 
 ### Goal
@@ -138,7 +145,7 @@ Guarantee that external registries are started and healthy before ArgoCD bootstr
 
 ### Tasks
 
-1. Add a new orchestration entrypoint, proposed as `scripts/start_platform_stack.sh`.
+1. Use the `platform-foundation` startup orchestration entrypoint for registry-first startup.
 2. Make the script environment-aware with `--env dev|test|prod`.
 3. Start the external registry containers first.
    - Prefer `docker compose up -d` from an external runtime directory.
@@ -154,6 +161,10 @@ Guarantee that external registries are started and healthy before ArgoCD bootstr
 ### Deliverable
 
 One operator command can start the external registries, wait for readiness, then continue with cluster bootstrap and application sync.
+
+Ownership note:
+
+That startup behavior is now owned by `platform-foundation`, not this repository.
 
 ## Workstream 3: GitOps repository cleanup
 

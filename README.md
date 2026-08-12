@@ -6,11 +6,10 @@ This repository contains the ArgoCD bootstrap and Application definitions for th
 
 - [GitOps Repository Restructure Plan](./GITOPS_REPOSITORY_RESTRUCTURE_PLAN.md)
 - [Externalize Registry Services Plan](./docs/implementation/2026-08-12_externalize-registry-services-plan.md)
+- [Registry Runtime Handoff Plan](./docs/implementation/2026-08-12_registry-runtime-handoff-plan.md)
 - [ArgoCD and kubectl Write Policy](./ARGOCD_KUBECTL_WRITE_POLICY.md)
 
-## External Runtimes
-
-- [Registry Runtime Stack](./runtime/registries/README.md)
+External registry runtime ownership now lives in the `platform-foundation` repository. This repo keeps the cluster-facing endpoint contract and GitOps configuration only.
 
 ## Structure
 
