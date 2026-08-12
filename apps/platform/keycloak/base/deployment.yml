@@ -24,7 +24,7 @@ spec:
           args: ["start"]
           ports:
             - containerPort: 8443
-              name: https
+              name: http
               protocol: TCP
           env:
             - name: KEYCLOAK_ADMIN
@@ -77,17 +77,9 @@ spec:
                 secretKeyRef:
                   name: keycloak-db-credentials
                   key: KC_DB_PASSWORD
-            - name: KC_DB_URL_SSL
-              value: "true"
-            - name: KC_DB_URL_SSL_ROOT_CERT
-              value: "/etc/keycloak/certs/ca.crt"
-            - name: KC_HTTPS_CERTIFICATE_FILE
-              value: "/etc/keycloak/certs/tls/tls.crt"
-            - name: KC_HTTPS_CERTIFICATE_KEY_FILE
-              value: "/etc/keycloak/certs/tls/tls.key"
           readinessProbe:
             httpGet:
-              scheme: HTTPS
+              scheme: HTTP
               path: /auth/realms/master/.well-known/openid-configuration
               port: 8443
             initialDelaySeconds: 30
@@ -96,7 +88,7 @@ spec:
             failureThreshold: 3
           livenessProbe:
             httpGet:
-              scheme: HTTPS
+              scheme: HTTP
               path: /auth/realms/master
               port: 8443
             initialDelaySeconds: 60
@@ -111,20 +103,8 @@ spec:
               cpu: "1000m"
               memory: "2Gi"
           volumeMounts:
-            - name: tls-certs
-              mountPath: /etc/keycloak/certs/tls
-              readOnly: true
-            - name: truststore
-              mountPath: /etc/keycloak/certs
-              readOnly: true
             - name: realm-import
               mountPath: /opt/keycloak/realm-import
       volumes:
-        - name: tls-certs
-          secret:
-            secretName: keycloak-tls
-        - name: truststore
-          secret:
-            secretName: keycloak-truststore
         - name: realm-import
           emptyDir: {}
