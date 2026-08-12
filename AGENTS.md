@@ -312,11 +312,19 @@ The `platform-foundation` document store indexes all platform Markdown documents
 # List lessons learned
 .pi/skills/document-store/scripts/docstore.sh lessons
 
+# Upload a document (auto-detects type and project)
+.pi/skills/document-store/scripts/docstore.sh upload docs/implementation/summaries/2026-08-13_my-summary.md
+
 # Check service status
 .pi/skills/document-store/scripts/docstore.sh status
 ```
 
 **Projects indexed**: `platform-foundation`, `dq-made-easy`, `platform-argocd-apps` (this repo)
+
+**Auto-upload rule**: After creating any implementation summary, lessons learned, or plan document, **always upload it** to the document store:
+```bash
+.pi/skills/document-store/scripts/docstore.sh upload <path-to-file.md> --project platform-argocd-apps
+```
 
 **Note**: The skill is symlinked from `platform-foundation/.pi/skills/document-store/`. To add to a new repo:
 ```bash
