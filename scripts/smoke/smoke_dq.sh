@@ -145,9 +145,9 @@ done
 # [3] ArgoCD Applications
 echo ""
 echo "--- ArgoCD Applications ---"
-argocd_apps=("tenant-dq-api" "tenant-dq-ui" "tenant-dq-engine")
+argocd_apps=("tenant-dq-dev")
 if [[ "$ENVIRONMENT" == "test" ]]; then
-  argocd_apps=("tenant-dq-api-test" "tenant-dq-ui-test" "tenant-dq-engine-test")
+  argocd_apps=("tenant-dq-test")
 fi
 
 for app in "${argocd_apps[@]}"; do

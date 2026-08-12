@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tenant-dq-ui
+  name: tenant-dq-dev
   namespace: argocd
 spec:
   project: dq
   source:
-    repoURL: https://github.com/jactools/dq-made-easy.git
-    targetRevision: release/test
-    path: dq-ui/k8s/argocd/test
+    repoURL: file:///repos/dq-made-easy
+    targetRevision: release/dev
+    path: k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dq-test
+    namespace: dq-dev
   syncPolicy:
     automated:
       prune: true

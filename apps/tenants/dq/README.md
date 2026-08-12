@@ -121,7 +121,12 @@ dq-made-easy/k8s/
 │       └── kustomization.yml    # patches hostnames, replicas, resources
 ```
 
-The ArgoCD Applications in this tenant overlay reference `{{DQ_MADE_EASY_REPO_URL}}/k8s/overlays/<env>` as their source. Once the consumer repo provides these paths, the ArgoCD sync will deploy the tenant workloads.
+The ArgoCD Applications in this tenant overlay reference `{{DQ_MADE_EASY_REPO_URL}}/k8s/overlays/<env>` as their source. One ArgoCD Application is used per environment:
+
+- `tenant-dq-dev` -> `k8s/overlays/dev`
+- `tenant-dq-test` -> `k8s/overlays/test`
+
+Once the consumer repo provides these paths, the ArgoCD sync will deploy the full tenant workload set for that environment.
 
 ## Image contract
 
@@ -152,12 +157,8 @@ Tenant services must reference secrets, never embed them. Expected secrets in th
 ```
 apps/tenants/dq/
 ├── argocd/                       # ArgoCD Application resources (stays in argocd namespace)
-│   ├── dq-api-dev.yml
-│   ├── dq-api-test.yml
-│   ├── dq-ui-dev.yml
-│   ├── dq-ui-test.yml
-│   ├── dq-engine-dev.yml
-│   └── dq-engine-test.yml
+│   ├── dq-dev.yml
+│   └── dq-test.yml
 ├── base/
 │   ├── kustomization.yml         # Shared labels, generic namespace template
 │   └── namespace.yml             # Namespace 'dq' (renamed per overlay)
@@ -169,4 +170,4 @@ apps/tenants/dq/
 └── README.md                     # This file
 ```
 
-The ArgoCD Application files in `argocd/` are applied directly (not via Kustomize overlays) so they remain in the `argocd` namespace. The `overlays/` directories handle only the tenant namespace resources.
+The ArgoCD Application files in `argocd/` are applied directly (not via Kustomize overlays) so they remain in the `argocd` namespace. The `dq-made-easy` consumer repository owns the actual workload manifests under `k8s/base/` and `k8s/overlays/<env>/`.

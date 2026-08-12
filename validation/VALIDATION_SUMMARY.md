@@ -11,7 +11,7 @@ Both `dq-made-easy` and `metadata-as-a-service` can be deployed from the same Ar
 
 | Tenant | Dev apps | Test apps | Status |
 |---|---|---|---|
-| `dq-made-easy` | `tenant-dq-api`, `tenant-dq-ui`, `tenant-dq-engine` | `tenant-dq-api-test`, `tenant-dq-ui-test`, `tenant-dq-engine-test` | ✓ All parse correctly |
+| `dq-made-easy` | `tenant-dq-dev` | `tenant-dq-test` | ✓ All parse correctly |
 | `metadata-as-a-service` | `tenant-maas-api`, `tenant-maas-coordinator`, `tenant-maas-control-plane`, `tenant-maas-central-repo`, `tenant-maas-scenario-catalog`, `tenant-maas-orchestrator`, `tenant-maas-bff`, `tenant-maas-web` | Same 8 with `-test` suffix | ✓ All parse correctly |
 
 ### Kustomize overlays (4 directories — all pass)
@@ -52,7 +52,7 @@ Both `dq-made-easy` and `metadata-as-a-service` can be deployed from the same Ar
 
 Both consumers share the same ArgoCD contract but cannot be fully deployed yet because:
 
-1. **Consumer K8s manifests missing**: The `dq-made-easy` and `metadata-as-a-service` repos don't yet have `k8s/overlays/<env>/` directories. The ArgoCD Applications reference `{{REPO_URL}}/k8s/overlays/<env>` which doesn't exist yet.
+1. **Consumer K8s manifests missing**: The `dq-made-easy` and `metadata-as-a-service` repos don't yet have the full `k8s/overlays/<env>/` deployment roots wired up consistently. The ArgoCD Applications reference `{{REPO_URL}}/k8s/overlays/<env>` which must exist for deployment.
 2. **Consumer images not published**: Tenant images (e.g. `dq-api:0.1.0`) are not yet published to the shared registry.
 3. **Consumer secrets not defined**: Tenant-specific secrets (DB credentials, SSO config) are not yet created in the overlays.
 
