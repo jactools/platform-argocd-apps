@@ -15,8 +15,6 @@ resources:
   - ai-stor/argocd/ai-stor-prod.yml
   - redis/argocd/redis-dev.yml
   - airflow/argocd/airflow-dev.yml
-  - docker-registry/argocd/docker-registry-dev.yml
-  - pypi-server/argocd/pypi-dev.yml
   - kyverno/argocd/kyverno-controller-dev.yml
   - kyverno/argocd/kyverno-policies-dev.yml
 
@@ -112,20 +110,6 @@ patches:
     target:
       kind: Application
       name: platform-airflow
-  - patch: |
-      - op: replace
-        path: /spec/source/repoURL
-        value: file:///repos/platform-argocd-apps
-    target:
-      kind: Application
-      name: platform-docker-registry
-  - patch: |
-      - op: replace
-        path: /spec/source/repoURL
-        value: file:///repos/platform-argocd-apps
-    target:
-      kind: Application
-      name: platform-pypi-server
   - patch: |
       - op: replace
         path: /spec/source/repoURL

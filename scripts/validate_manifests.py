@@ -290,10 +290,9 @@ def check_argocd_app_references(
         dest_ns = destination.get("namespace", "")
         if dest_ns and dest_ns not in (
             "argocd", "platform-kong", "platform-keycloak", "platform-observability",
-            "platform-tls", "platform-registry", "platform-airflow", "platform-kafka",
+            "platform-tls", "platform-airflow", "platform-kafka",
             "platform-redis", "platform-shared", "platform-trino", "platform-ai-stor",
             "kyverno", "dq-dev", "dq-test", "maas-dev", "maas-test",
-            "platform-docker-registry", "platform-pypi-server",
         ):
             errors.append(f"[L5] Application/{name}: destination namespace = '{dest_ns}' (unexpected)")
 

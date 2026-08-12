@@ -28,8 +28,6 @@ spec:
       server: '*'
     - namespace: platform-shared
       server: '*'
-    - namespace: platform-registry
-      server: '*'
     - namespace: platform-tls
       server: '*'
     - namespace: kyverno

@@ -1,7 +1,7 @@
 # Externalize Registry Services Plan
 
 **Date:** 2026-08-12  
-**Status:** Proposed
+**Status:** In Progress
 
 ## Objective
 
@@ -38,13 +38,11 @@ The cleanest migration seam is already present: consumers mostly reference exter
 - Docker images already use `docker-registry.dev.jac.dot:5000` and `docker-registry.jacloud.nl:5000` via `environments/*/image-registry-config.yml`
 - PyPI ingress already exposes environment-specific public package hosts, and the target naming now converges on `packages.<env>.jac.dot`
 
-The remaining cluster coupling is operational rather than contractual:
+The remaining cluster coupling is now limited to consumer-facing contracts and documentation:
 
-- ArgoCD still deploys both apps into `platform-registry`
-- `argocd/config/projects/platform-project.yml` still allows the `platform-registry` namespace
-- `scripts/validate_manifests.py` still treats the registry apps and namespace as expected platform targets
-- `apps/platform/kyverno/base/policies/block-dockerhub-images.yml` still describes the registry as cluster-local
-- bootstrap and shared-secret flows still account for `platform-registry`
+- workloads still reference the external registry and package endpoints
+- `apps/platform/kyverno/base/policies/block-dockerhub-images.yml` still describes the registry path in cluster-oriented language
+- some implementation notes still refer to the pre-removal `platform-registry` setup for historical context
 
 ## Target state
 
@@ -181,9 +179,9 @@ Remove in-cluster ownership from this repository while preserving consumption co
    - If temporary retention is needed, mark them deprecated and stop referencing them from ArgoCD.
 3. Remove validation assumptions tied to the old apps.
    - Update `scripts/validate_manifests.py` so the retired app names and destinations are no longer expected.
-4. Reassess the `platform-registry` namespace.
-   - If nothing else uses it, remove it from `argocd/config/projects/platform-project.yml` and the bootstrap project manifests.
-   - If another shared component still needs it, narrow ownership to that remaining use only.
+4. Remove the old `platform-registry` namespace assumptions from cluster ownership.
+   - Completed: removed it from `argocd/config/projects/platform-project.yml` and the bootstrap project manifests.
+   - Completed: removed the namespace bootstrap from the shared secret-init flow.
 5. Update policy and contract docs.
    - `images/IMAGE_REFERENCE_CONTRACT.md`
    - `apps/platform/kyverno/base/policies/block-dockerhub-images.yml`
@@ -191,7 +189,7 @@ Remove in-cluster ownership from this repository while preserving consumption co
 6. Remove cluster bootstrap logic that exists only for these services.
    - TLS secret generation for the registry
    - PyPI auth bootstrap job
-   - any shared-secret setup that only served `platform-registry`
+   - any shared-secret setup that only served the removed in-cluster registry namespace
 
 ### Deliverable
 
@@ -209,8 +207,8 @@ Ensure build, publish, and install flows still work after the hosting model chan
 2. Update those files only if endpoint names or ports must change.
 3. Update any image publish automation to push to the external registry host.
 4. Replace cluster-local PyPI URLs with external package endpoints in developer and automation credentials.
-   - The current local credential example still points at `pypi-server.platform-registry.svc.cluster.local`.
-   - Switch those credentials to `https://packages.<env>.jac.dot`.
+   - Completed for the current dev credentials path.
+   - Keep the final target as `https://packages.<env>.jac.dot`.
 5. Verify that container runtimes can pull images without `kind load docker-image` as the primary path.
    - Keep `kind load docker-image` only as an explicit fallback for offline debugging.
 6. Verify that pip and build tooling can install from the external package index.
