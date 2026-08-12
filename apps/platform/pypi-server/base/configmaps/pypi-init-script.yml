@@ -3,6 +3,10 @@ kind: ConfigMap
 metadata:
   name: pypi-init-script
   namespace: platform-registry
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "-10"
 data:
   generate_secrets.sh: |
     #!/usr/bin/env bash

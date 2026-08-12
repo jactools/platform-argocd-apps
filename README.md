@@ -5,7 +5,12 @@ This repository contains the ArgoCD bootstrap and Application definitions for th
 ## Plans
 
 - [GitOps Repository Restructure Plan](./GITOPS_REPOSITORY_RESTRUCTURE_PLAN.md)
+- [Externalize Registry Services Plan](./docs/implementation/2026-08-12_externalize-registry-services-plan.md)
 - [ArgoCD and kubectl Write Policy](./ARGOCD_KUBECTL_WRITE_POLICY.md)
+
+## External Runtimes
+
+- [Registry Runtime Stack](./runtime/registries/README.md)
 
 ## Structure
 

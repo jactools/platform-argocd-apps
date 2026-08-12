@@ -24,9 +24,18 @@ spec:
         - name: ai-stor-data
           persistentVolumeClaim:
             claimName: ai-stor-data
-        - name: ai-stor-tls
+        - name: ai-stor-tls-cert
           secret:
             secretName: ai-stor-tls
+            items:
+              - key: tls.crt
+                path: public.crt
+        - name: ai-stor-tls-key
+          secret:
+            secretName: ai-stor-tls
+            items:
+              - key: tls.key
+                path: private.key
         - name: ai-stor-truststore
           configMap:
             name: platform-root-ca
@@ -67,8 +76,14 @@ spec:
           volumeMounts:
             - name: ai-stor-data
               mountPath: /data
-            - name: ai-stor-tls
-              mountPath: /certs
+            - name: ai-stor-tls-cert
+              mountPath: /certs/public.crt
+              subPath: public.crt
+              readOnly: true
+            - name: ai-stor-tls-key
+              mountPath: /certs/private.key
+              subPath: private.key
+              readOnly: true
             - name: ai-stor-truststore
               mountPath: /etc/ssl/certs/platform-root-ca.pem
               subPath: rootCA.pem
