@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-kong
+  name: platform-kong-test
   namespace: argocd
 spec:
   project: platform

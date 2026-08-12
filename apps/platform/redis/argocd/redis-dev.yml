@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-redis
+  name: platform-redis-dev
   namespace: argocd
 spec:
   project: platform

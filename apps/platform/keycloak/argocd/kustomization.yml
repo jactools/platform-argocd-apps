@@ -4,8 +4,11 @@ kind: Kustomization
 # Base ArgoCD app manifests
 resources:
   - ../../keycloak/argocd/keycloak-dev.yml
+  - ../../keycloak/argocd/keycloak-test.yml
   - ../../kong/argocd/kong-dev.yml
+  - ../../kong/argocd/kong-test.yml
   - ../../observability/argocd/observability-dev.yml
+  - ../../observability/argocd/observability-test.yml
 
 # Patch repo URLs
 patches:
@@ -15,18 +18,39 @@ patches:
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-keycloak
+      name: platform-keycloak-dev
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-kong
+      name: platform-keycloak-test
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-observability
+      name: platform-kong-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kong-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-observability-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-observability-test

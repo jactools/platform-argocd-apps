@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-kafka
+  name: platform-kafka-dev
   namespace: argocd
 spec:
   project: platform

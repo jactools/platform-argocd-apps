@@ -6,17 +6,26 @@ resources:
   - shared/argocd/shared-test.yml
   - shared/argocd/shared-prod.yml
   - keycloak/argocd/keycloak-dev.yml
+  - keycloak/argocd/keycloak-test.yml
   - kong/argocd/kong-dev.yml
+  - kong/argocd/kong-test.yml
   - observability/argocd/observability-dev.yml
+  - observability/argocd/observability-test.yml
   - kafka/argocd/kafka-dev.yml
+  - kafka/argocd/kafka-test.yml
   - trino/argocd/trino-dev.yml
+  - trino/argocd/trino-test.yml
   - ai-stor/argocd/ai-stor-dev.yml
   - ai-stor/argocd/ai-stor-test.yml
   - ai-stor/argocd/ai-stor-prod.yml
   - redis/argocd/redis-dev.yml
+  - redis/argocd/redis-test.yml
   - airflow/argocd/airflow-dev.yml
+  - airflow/argocd/airflow-test.yml
   - kyverno/argocd/kyverno-controller-dev.yml
+  - kyverno/argocd/kyverno-controller-test.yml
   - kyverno/argocd/kyverno-policies-dev.yml
+  - kyverno/argocd/kyverno-policies-test.yml
 
 patches:
   - patch: |
@@ -46,35 +55,70 @@ patches:
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-keycloak
+      name: platform-keycloak-dev
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-kong
+      name: platform-keycloak-test
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-observability
+      name: platform-kong-dev
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-kafka
+      name: platform-kong-test
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-trino
+      name: platform-observability-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-observability-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kafka-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kafka-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-trino-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-trino-test
   - patch: |
       - op: replace
         path: /spec/source/repoURL
@@ -102,25 +146,53 @@ patches:
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-redis
+      name: platform-redis-dev
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-airflow
+      name: platform-redis-test
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-kyverno
+      name: platform-airflow-dev
   - patch: |
       - op: replace
         path: /spec/source/repoURL
         value: file:///repos/platform-argocd-apps
     target:
       kind: Application
-      name: platform-kyverno-policies
+      name: platform-airflow-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kyverno-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kyverno-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kyverno-policies-dev
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-kyverno-policies-test

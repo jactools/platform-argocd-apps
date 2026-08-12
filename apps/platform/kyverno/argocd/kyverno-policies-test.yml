@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform-kyverno-policies
+  name: platform-kyverno-policies-test
   namespace: argocd
 spec:
   project: platform
