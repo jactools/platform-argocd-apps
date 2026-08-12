@@ -289,6 +289,41 @@ All database tables must include:
 
 Actor context is passed via the `X-Actor` header.
 
+## Document Store — Platform Knowledge Base
+
+The `platform-foundation` document store indexes all platform Markdown documents (134 docs across 3 repos) and is searchable via the document store skill.
+
+**Skill**: symlinked at `.pi/skills/document-store/` → auto-loaded by pi.
+
+**Use the document store before:**
+- Writing an implementation summary (check if one already exists)
+- Debugging a known issue (lessons learned may have the answer)
+- Making a platform decision (check past ADRs or lessons learned)
+- Onboarding a new repository (consumer contracts, onboarding guides)
+
+**Quick commands (works from this repo via symlink):**
+```bash
+# Search for documents
+.pi/skills/document-store/scripts/docstore.sh search "ArgoCD bootstrap"
+
+# Get full document content
+.pi/skills/document-store/scripts/docstore.sh get <document_id>
+
+# List lessons learned
+.pi/skills/document-store/scripts/docstore.sh lessons
+
+# Check service status
+.pi/skills/document-store/scripts/docstore.sh status
+```
+
+**Projects indexed**: `platform-foundation`, `dq-made-easy`, `platform-argocd-apps` (this repo)
+
+**Note**: The skill is symlinked from `platform-foundation/.pi/skills/document-store/`. To add to a new repo:
+```bash
+mkdir -p .pi/skills
+ln -sf /path/to/platform-foundation/.pi/skills/document-store .pi/skills/document-store
+```
+
 ## Repository Structure
 
 ```

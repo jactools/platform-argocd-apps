@@ -9,6 +9,8 @@
 .DS_Store
 Thumbs.db
 
+.pi/
+
 # Generated (should not be committed)
 *-generated.yml
 __pycache__/
