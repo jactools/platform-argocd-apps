@@ -122,6 +122,19 @@ After the cutover, prefer repo-driven selection rather than hardcoded old app na
 
 The repo helpers now select the suffixed names from the current manifests.
 
+### 7. Run the rename verification helper
+
+Use the helper script to verify that the new suffixed names exist and the old
+unsuffixed names are gone:
+
+```bash
+KUBECONFIG=/path/to/kubeconfig \
+	./scripts/python_arm64.sh scripts/validate_argocd_application_rename.py --env dev
+
+KUBECONFIG=/path/to/kubeconfig \
+	./scripts/python_arm64.sh scripts/validate_argocd_application_rename.py --env test
+```
+
 ## Fallback path if automatic pruning does not happen
 
 If the ApplicationSet creates the new names but leaves the old names behind:
