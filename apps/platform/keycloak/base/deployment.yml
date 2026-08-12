@@ -42,11 +42,26 @@ spec:
                 configMapKeyRef:
                   name: keycloak-config
                   key: KC_HOSTNAME_STRICT
+            - name: KC_HTTP_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: KC_HTTP_ENABLED
+            - name: KC_HTTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: KC_HTTP_PORT
             - name: KC_HTTP_RELATIVE_PATH
               valueFrom:
                 configMapKeyRef:
                   name: keycloak-config
                   key: KC_HTTP_RELATIVE_PATH
+            - name: KC_PROXY_HEADERS
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: KC_PROXY_HEADERS
             - name: KC_DB
               valueFrom:
                 configMapKeyRef:

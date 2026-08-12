@@ -5,9 +5,11 @@ metadata:
   name: keycloak-config
 data:
   # Keycloak configuration values
+  KC_HTTP_ENABLED: "true"
   KC_HTTP_PORT: "8443"
   KC_HTTP_RELATIVE_PATH: "/auth"
   KC_DB: "postgres"
   KC_DB_URL_HOST: "keycloak-db"
   KC_DB_URL_PORT: "5432"
+  KC_PROXY_HEADERS: "xforwarded"
   KC_HOSTNAME_STRICT: "false"
