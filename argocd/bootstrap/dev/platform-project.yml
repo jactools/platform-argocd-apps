@@ -56,3 +56,5 @@ spec:
       kind: SecretStore
     - group: external-secrets.io
       kind: ExternalSecret
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
