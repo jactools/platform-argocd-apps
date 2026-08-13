@@ -40,3 +40,6 @@ spec:
           {{- if hasPrefix "platform-kyverno" .metadata.name }}
           - ServerSideApply=true
           {{- end }}
+          {{- if hasPrefix "platform-eso" .metadata.name }}
+          - ServerSideApply=true
+          {{- end }}

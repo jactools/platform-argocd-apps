@@ -1,0 +1,74 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# ESO — External Secrets Operator v2.9.0
+# Vendor manifests patched with platform namespace and labels
+
+namespace: platform-eso
+
+labels:
+  - includeSelectors: true
+    pairs:
+      platform.jaccloud.nl/managed-by: argocd
+      platform.jaccloud.nl/service: eso
+      platform.jaccloud.nl/tenant: platform
+
+resources:
+  - namespace.yml
+  - vendor/external-secrets.yaml
+  - cluster-secret-store.yml
+  - rbac.yml
+
+patches:
+  # Patch all resources from vendor to target platform-eso namespace
+  - target:
+      kind: Deployment
+      name: external-secrets
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Deployment
+      name: external-secrets-webhook
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Deployment
+      name: external-secrets-cert-controller
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: ServiceAccount
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Service
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Secret
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Role
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: RoleBinding
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso

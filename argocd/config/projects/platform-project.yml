@@ -9,7 +9,7 @@ metadata:
 spec:
   description: Platform services managed by platform-foundation
   sourceRepos:
-    - '*'
+    - file:///repos/platform-argocd-apps
   destinations:
     - namespace: platform-kong
       server: '*'
@@ -30,7 +30,13 @@ spec:
       server: '*'
     - namespace: platform-tls
       server: '*'
+    - namespace: platform-registry
+      server: '*'
+    - namespace: platform-ingestion
+      server: '*'
     - namespace: kyverno
+      server: '*'
+    - namespace: platform-eso
       server: '*'
   clusterResourceWhitelist:
     - group: ''
@@ -43,3 +49,9 @@ spec:
       kind: ClusterRoleBinding
     - group: kyverno.io
       kind: ClusterPolicy
+    - group: external-secrets.io
+      kind: ClusterSecretStore
+    - group: external-secrets.io
+      kind: SecretStore
+    - group: external-secrets.io
+      kind: ExternalSecret

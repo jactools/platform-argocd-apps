@@ -9,7 +9,7 @@ metadata:
 spec:
   description: Platform services managed by platform-foundation
   sourceRepos:
-    - '*'
+    - file:///repos/platform-argocd-apps
   destinations:
     - namespace: platform-kong
       server: '*'
@@ -30,6 +30,10 @@ spec:
     - namespace: platform-shared
       server: '*'
     - namespace: platform-tls
+    - namespace: platform-registry
+      server: '*'
+    - namespace: platform-ingestion
+      server: '*'
       server: '*'
     - namespace: kyverno
       server: '*'

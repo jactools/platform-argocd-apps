@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-eso
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/tenant: platform
+    platform.jaccloud.nl/service: eso

@@ -1,0 +1,34 @@
+# ClusterRole — allows ESO to read secrets from platform namespaces
+# NOTE: Currently permissive (reads all secrets in listed namespaces).
+# After WS5 (dedicated SAs), tighten to per-principal named secrets.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: eso-platform-secret-reader
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: eso
+    platform.jaccloud.nl/tenant: platform
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+
+---
+# ClusterRoleBinding — grant ESO SA permission to read platform secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eso-platform-secret-reader-binding
+  labels:
+    platform.jaccloud.nl/managed-by: argocd
+    platform.jaccloud.nl/service: eso
+    platform.jaccloud.nl/tenant: platform
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: eso-platform-secret-reader
+subjects:
+  - kind: ServiceAccount
+    name: external-secrets
+    namespace: platform-eso

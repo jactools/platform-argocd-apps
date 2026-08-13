@@ -1,0 +1,28 @@
+# Default ArgoCD AppProject — restricted to prevent unauthorized deployments
+#
+# This project is created by ArgoCD automatically and is too permissive by default.
+# We restrict it to prevent unauthorized deployments while maintaining backward
+# compatibility for ArgoCD's own management operations.
+#
+# All intentional deployments should use named projects (platform, dq, maas).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: Restricted default project — use named projects for deployments
+  sourceRepos:
+    - file:///repos/platform-argocd-apps
+  destinations:
+    # Only allow platform management namespaces via default project
+    # All other deployments must use named projects (platform, dq, maas)
+    - namespace: platform-tls
+      server: '*'
+    - namespace: platform-shared
+      server: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace

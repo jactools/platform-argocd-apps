@@ -12,3 +12,9 @@ resources:
   - namespaces/platform-shared.yml
   - configmaps/secret-init-script.yml
   - jobs/secret-init-job.yml
+  - rbac/platform-operator-role.yml
+  - rbac/platform-viewer-role.yml
+  - rbac/platform-service-sa-role.yml
+  - rbac/tenant-operator-role.yml
+  - rbac/tenant-viewer-role.yml
+  - rbac/tenant-workload-sa-role.yml

@@ -1,0 +1,16 @@
+# ArgoCD AppProject definitions — restricts deployment boundaries
+#
+# Projects:
+#   default    — restricted to platform management namespaces only
+#   platform   — platform services (restricted to platform-argocd-apps repo)
+#   dq         — dq-made-easy tenant workloads
+#   maas       — metadata-as-a-service tenant workloads
+#
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - default-project.yml
+  - platform-project.yml
+  - dq-project.yml
+  - maas-project.yml

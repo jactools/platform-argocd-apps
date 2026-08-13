@@ -1,0 +1,27 @@
+# Platform Service Account Role
+# Scope: platform-namespace-scoped role for platform service workloads
+# Grants minimal runtime permissions for platform services
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: platform-service-sa
+  labels:
+    app.kubernetes.io/part-of: platform-foundation
+    app.kubernetes.io/component: rbac
+rules:
+  # ConfigMaps — read own config
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+  # Secrets — read own credentials only
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  # Pods — read own pod list (for health checks, leader election)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  # Endpoints — read service discovery
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch"]

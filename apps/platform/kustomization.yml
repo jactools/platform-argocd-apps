@@ -26,6 +26,7 @@ resources:
   - kyverno/argocd/kyverno-controller-test.yml
   - kyverno/argocd/kyverno-policies-dev.yml
   - kyverno/argocd/kyverno-policies-test.yml
+  - eso/argocd/eso-dev.yml
 
 patches:
   - patch: |
@@ -196,3 +197,10 @@ patches:
     target:
       kind: Application
       name: platform-kyverno-policies-test
+  - patch: |
+      - op: replace
+        path: /spec/source/repoURL
+        value: file:///repos/platform-argocd-apps
+    target:
+      kind: Application
+      name: platform-eso-dev

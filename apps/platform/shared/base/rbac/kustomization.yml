@@ -1,0 +1,23 @@
+# Platform RBAC — Roles for namespace-scoped access control
+# 
+# These Roles are applied to platform-* and tenant namespaces via kustomize.
+# RoleBindings are created per-namespace in each overlay.
+#
+# Roles:
+#   platform-operator    — full admin within platform namespace
+#   platform-viewer      — read-only within platform namespace
+#   platform-service-sa  — minimal runtime permissions for platform services
+#   tenant-operator      — full admin within tenant namespace
+#   tenant-viewer        — read-only within tenant namespace
+#   tenant-workload-sa   — minimal runtime permissions for tenant workloads
+#
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - platform-operator-role.yml
+  - platform-viewer-role.yml
+  - platform-service-sa-role.yml
+  - tenant-operator-role.yml
+  - tenant-viewer-role.yml
+  - tenant-workload-sa-role.yml

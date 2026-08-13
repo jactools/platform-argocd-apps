@@ -1,0 +1,31 @@
+# Tenant Workload Service Account Role
+# Scope: tenant-namespace-scoped role for tenant workloads
+# Grants minimal runtime permissions for tenant applications
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tenant-workload-sa
+  labels:
+    app.kubernetes.io/part-of: platform-foundation
+    app.kubernetes.io/component: rbac
+rules:
+  # ConfigMaps — read own config
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+  # Secrets — read own credentials only
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  # Pods — read own pod list
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  # Endpoints — read service discovery
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch"]
+  # Events — read pod events
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
