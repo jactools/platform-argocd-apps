@@ -26,7 +26,7 @@ patches:
         path: /metadata/namespace
         value: platform-eso
       - op: replace
-        path: /spec/template/spec/containers/0/args/1
+        path: /spec/template/spec/containers/0/args/2
         value: --dns-name=external-secrets-webhook.platform-eso.svc
   - target:
       kind: Deployment
