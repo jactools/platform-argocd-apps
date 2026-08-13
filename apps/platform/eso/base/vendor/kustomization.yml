@@ -1,8 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# ESO vendor manifests — namespace patches only, no label injection.
-# Labels on CRDs would exceed the 256KB annotation limit.
+# ESO vendor manifests — namespace patches and arg fixes.
+# No label injection (CRD annotation size limit).
 
 namespace: platform-eso
 
@@ -10,6 +10,7 @@ resources:
   - external-secrets.yaml
 
 patches:
+  # Fix namespace references in all resources
   - target:
       kind: Deployment
       name: external-secrets
@@ -31,6 +32,12 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
+      - op: replace
+        path: /spec/template/spec/containers/0/args/3
+        value: --service-namespace=platform-eso
+      - op: replace
+        path: /spec/template/spec/containers/0/args/5
+        value: --secret-namespace=platform-eso
   - target:
       kind: ServiceAccount
     patch: |

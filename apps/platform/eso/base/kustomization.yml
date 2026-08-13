@@ -3,7 +3,7 @@ kind: Kustomization
 
 # ESO — External Secrets Operator v2.9.0
 # Vendor CRDs are deployed without labels (256KB annotation limit).
-# Platform resources (namespace, ClusterSecretStore, RBAC) get labels.
+# Non-CRD vendor resources + platform resources get platform labels.
 
 namespace: platform-eso
 
