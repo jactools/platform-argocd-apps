@@ -18,3 +18,5 @@ spec:
   clusterResourceWhitelist:
     - group: ''
       kind: Namespace
+    - group: external-secrets.io
+      kind: ExternalSecret
