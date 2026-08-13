@@ -133,6 +133,7 @@ packages/metadata-<name>/
 
 ### GitOps Write Policy
 - Treat Git as the source of truth for all ArgoCD-managed namespaces.
+- Flux migration planning is owned in `platform-foundation`, but this repository remains ArgoCD-owned until an approved cutover changes the controller of record.
 - Avoid direct `kubectl` writes to ArgoCD-managed resources unless a break-glass emergency is explicitly required.
 - Use `kubectl` for read-only inspection and debugging only.
 - Follow [ARGOCD_KUBECTL_WRITE_POLICY.md](ARGOCD_KUBECTL_WRITE_POLICY.md) for the full namespace list, enforcement model, and emergency workflow.
