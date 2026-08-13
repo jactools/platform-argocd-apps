@@ -1,8 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# ESO vendor manifests — namespace patches and arg fixes.
+# ESO vendor manifests — namespace patches, arg fixes, and sync-wave annotations.
 # No label injection (CRD annotation size limit).
+# CRDs + SAs get wave 0, Deployments get wave 5, ClusterSecretStore (in base) gets wave 20.
 
 namespace: platform-eso
 
@@ -10,7 +11,68 @@ resources:
   - external-secrets.yaml
 
 patches:
-  # Fix namespace references in all resources
+  # Sync wave: CRDs first (0)
+  - target:
+      kind: CustomResourceDefinition
+    patch: |
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "0"
+
+  # Sync wave: ServiceAccounts, Services, Roles, Secrets next (2)
+  - target:
+      kind: ServiceAccount
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "2"
+  - target:
+      kind: Service
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "2"
+  - target:
+      kind: Secret
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "2"
+  - target:
+      kind: Role
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "2"
+  - target:
+      kind: RoleBinding
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "2"
+
+  # Sync wave: Deployments after CRDs + SAs (5)
   - target:
       kind: Deployment
       name: external-secrets
@@ -18,6 +80,10 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "5"
   - target:
       kind: Deployment
       name: external-secrets-webhook
@@ -25,6 +91,10 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "5"
       - op: replace
         path: /spec/template/spec/containers/0/args/2
         value: --dns-name=external-secrets-webhook.platform-eso.svc
@@ -35,39 +105,22 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "5"
       - op: replace
         path: /spec/template/spec/containers/0/args/3
         value: --service-namespace=platform-eso
       - op: replace
         path: /spec/template/spec/containers/0/args/5
         value: --secret-namespace=platform-eso
+
+  # ValidatingWebhookConfigs after deployments (8)
   - target:
-      kind: ServiceAccount
+      kind: ValidatingWebhookConfiguration
     patch: |
-      - op: replace
-        path: /metadata/namespace
-        value: platform-eso
-  - target:
-      kind: Service
-    patch: |
-      - op: replace
-        path: /metadata/namespace
-        value: platform-eso
-  - target:
-      kind: Secret
-    patch: |
-      - op: replace
-        path: /metadata/namespace
-        value: platform-eso
-  - target:
-      kind: Role
-    patch: |
-      - op: replace
-        path: /metadata/namespace
-        value: platform-eso
-  - target:
-      kind: RoleBinding
-    patch: |
-      - op: replace
-        path: /metadata/namespace
-        value: platform-eso
+      - op: add
+        path: /metadata/annotations
+        value:
+          argocd.argoproj.io/sync-wave: "8"
