@@ -1,0 +1,63 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# ESO vendor manifests — namespace patches only, no label injection.
+# Labels on CRDs would exceed the 256KB annotation limit.
+
+namespace: platform-eso
+
+resources:
+  - external-secrets.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: external-secrets
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Deployment
+      name: external-secrets-webhook
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Deployment
+      name: external-secrets-cert-controller
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: ServiceAccount
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Service
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Secret
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: Role
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
+  - target:
+      kind: RoleBinding
+    patch: |
+      - op: replace
+        path: /metadata/namespace
+        value: platform-eso
