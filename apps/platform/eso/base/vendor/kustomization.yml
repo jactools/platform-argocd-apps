@@ -1,9 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# ESO vendor manifests — namespace patches, arg fixes, and sync-wave annotations.
+# ESO vendor manifests — namespace patches and arg fixes.
 # No label injection (CRD annotation size limit).
-# CRDs + SAs get wave 0, Deployments get wave 5, ClusterSecretStore (in base) gets wave 20.
+#
+# Flux ordering is handled by split Kustomizations with dependsOn:
+#   platform-eso-crds.yaml → platform-eso-resources.yaml → platform-eso-controllers.yaml
 
 namespace: platform-eso
 
@@ -11,68 +13,45 @@ resources:
   - external-secrets.yaml
 
 patches:
-  # Sync wave: CRDs first (0)
+  # CRDs — no sync-wave needed (Flux handles ordering via dependsOn)
   - target:
       kind: CustomResourceDefinition
     patch: |
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "0"
+      # No annotations needed — Flux handles ordering via dependsOn
 
-  # Sync wave: ServiceAccounts, Services, Roles, Secrets next (2)
+  # ServiceAccounts, Services, Roles, Secrets — no sync-wave needed
   - target:
       kind: ServiceAccount
     patch: |
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "2"
   - target:
       kind: Service
     patch: |
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "2"
   - target:
       kind: Secret
     patch: |
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "2"
   - target:
       kind: Role
     patch: |
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "2"
   - target:
       kind: RoleBinding
     patch: |
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "2"
 
-  # Sync wave: Deployments after CRDs + SAs (5)
+  # Deployments — no sync-wave needed
   - target:
       kind: Deployment
       name: external-secrets
@@ -80,10 +59,6 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "5"
   - target:
       kind: Deployment
       name: external-secrets-webhook
@@ -91,10 +66,6 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "5"
       - op: replace
         path: /spec/template/spec/containers/0/args/2
         value: --dns-name=external-secrets-webhook.platform-eso.svc
@@ -105,10 +76,6 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: platform-eso
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "5"
       - op: replace
         path: /spec/template/spec/containers/0/args/3
         value: --service-namespace=platform-eso
@@ -116,11 +83,8 @@ patches:
         path: /spec/template/spec/containers/0/args/5
         value: --secret-namespace=platform-eso
 
-  # ValidatingWebhookConfigs after deployments (8)
+  # ValidatingWebhookConfigs — no sync-wave needed
   - target:
       kind: ValidatingWebhookConfiguration
     patch: |
-      - op: add
-        path: /metadata/annotations
-        value:
-          argocd.argoproj.io/sync-wave: "8"
+      # No annotations needed — Flux handles ordering via dependsOn
