@@ -1,20 +1,20 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: block-argocd-managed-writes
+  name: block-managed-writes
   annotations:
-    policies.kyverno.io/title: Block ArgoCD Managed Writes
+    policies.kyverno.io/title: Block Managed Writes
     policies.kyverno.io/category: Platform Security
     policies.kyverno.io/severity: high
     policies.kyverno.io/description: >-
-      Blocks direct kubectl writes from human users to ArgoCD-managed
-      namespaces and repo-managed Kyverno policies. Changes must flow
-      through Git and ArgoCD reconciliation.
+      Blocks direct kubectl writes from human users to platform-managed
+      namespaces. Changes must flow through Git and Flux reconciliation.
+      Tenant namespaces (dq-*, maas-*) allow writes for bootstrap.
 spec:
   validationFailureAction: Enforce
   background: false
   rules:
-    - name: deny-human-writes-to-argocd-namespaces
+    - name: deny-human-writes-to-platform-namespaces
       match:
         any:
           - resources:
@@ -28,14 +28,14 @@ spec:
                 - platform-observability
                 - platform-redis
                 - platform-tls
-                - dq-dev
-                - dq-test
-                - maas-dev
-                - maas-test
+                - platform-shared
+                - platform-ai-stor
+                - platform-airflow
+                - platform-kafka
+                - platform-eso
       validate:
         message: >-
-          Namespace changes for ArgoCD-managed environments must go through Git.
-          Direct kubectl writes are blocked for human users.
+          Platform namespace changes must go through Git. Direct kubectl writes are blocked.
         deny:
           conditions:
             any:
@@ -43,13 +43,11 @@ spec:
                 operator: Equals
                 value: false
 
-    - name: deny-human-writes-to-managed-namespaced-resources
+    - name: deny-human-writes-to-platform-resources
       match:
         any:
           - resources:
               kinds:
-                - Application
-                - AppProject
                 - ConfigMap
                 - Deployment
                 - HorizontalPodAutoscaler
@@ -71,14 +69,14 @@ spec:
                 - platform-observability
                 - platform-redis
                 - platform-tls
-                - dq-dev
-                - dq-test
-                - maas-dev
-                - maas-test
+                - platform-shared
+                - platform-ai-stor
+                - platform-airflow
+                - platform-kafka
+                - platform-eso
       validate:
         message: >-
-          ArgoCD-managed resources in these namespaces must be updated through Git.
-          Direct kubectl writes are blocked for human users.
+          Platform-managed resources must be updated through Git. Direct kubectl writes are blocked.
         deny:
           conditions:
             any:
@@ -94,11 +92,10 @@ spec:
                 - ClusterPolicy
               names:
                 - block-dockerhub-images
-                - block-argocd-managed-writes
+                - block-managed-writes
       validate:
         message: >-
-          Kyverno policies in this repository are ArgoCD-managed and must be
-          changed through Git.
+          Kyverno policies are Git-managed and must be changed through Git.
         deny:
           conditions:
             any:
