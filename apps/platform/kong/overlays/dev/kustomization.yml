@@ -9,10 +9,8 @@ commonLabels:
 resources:
   - ../../base
 
-images:
-  - name: postgres:17-bookworm
-    newName: docker-registry.dev.jac.dot:10443/postgres
-    newTag: "17-bookworm"
+# postgres:17-bookworm is pre-loaded in Kind; no registry override needed
+# platform-kong image (jacbeekers/platform-kong:0.1.0) is also pre-loaded
 
 # Dev ingress hostnames and TLS
 patches:
