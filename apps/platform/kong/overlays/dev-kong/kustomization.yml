@@ -1,0 +1,53 @@
+# Kong — deployment, services, ingresses
+# Flux ordering: platform-kong-db → platform-kong-migrations → platform-kong
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: platform-kong
+
+commonLabels:
+  platform.jaccloud.nl/environment: dev
+
+resources:
+  - ../../base/deployment.yml
+  - ../../base/service.yml
+  - ../../base/ingress.yml
+
+images:
+  - name: jacbeekers/platform-kong:0.1.0
+    newName: docker-registry.dev.jac.dot:10443/platform-kong
+    newTag: "0.1.0"
+
+# Dev ingress hostnames and TLS
+patches:
+  - target:
+      kind: Ingress
+      name: kong-proxy
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong.dev.jac.dot
+  - target:
+      kind: Ingress
+      name: kong-manager
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong-manager.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong-manager.dev.jac.dot
+  - target:
+      kind: Ingress
+      name: kong-admin
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: kong-admin.dev.jac.dot
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kong-admin.dev.jac.dot

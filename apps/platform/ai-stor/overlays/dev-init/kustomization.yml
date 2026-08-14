@@ -1,0 +1,24 @@
+# AIStor init — namespace, init script configmap, init job, SA, Role, RoleBinding
+# Flux ordering: platform-ai-stor-init → platform-ai-stor
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: platform-ai-stor
+
+resources:
+  - ../../base/namespace.yml
+  - ../../base/configmaps/ai-stor-init-script.yml
+  - ../../base/jobs/ai-stor-init-job.yml
+
+labels:
+  - pairs:
+      platform.jaccloud.nl/environment: dev
+      platform.jaccloud.nl/managed-by: argocd
+      platform.jaccloud.nl/service: ai-stor
+      platform.jaccloud.nl/tenant: platform
+    includeSelectors: true
+
+commonAnnotations:
+  platform.jaccloud.nl/workload-kind: job
+  platform.jaccloud.nl/maas-register: "false"

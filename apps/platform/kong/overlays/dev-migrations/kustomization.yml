@@ -1,0 +1,13 @@
+# Kong migrations — runs after DB is ready
+# Flux ordering: platform-kong-db → platform-kong-migrations → platform-kong
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: platform-kong
+
+commonLabels:
+  platform.jaccloud.nl/environment: dev
+
+resources:
+  - ../../base/kong-migrations.yml
