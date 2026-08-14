@@ -70,6 +70,11 @@ spec:
               value: "https://ai-stor.platform-ai-stor.svc.cluster.local:9000"
             - name: MINIO_BROWSER_REDIRECT_URL
               value: "https://ai-stor-console.platform-ai-stor.svc.cluster.local:9001"
+            - name: MINIO_LICENSE
+              valueFrom:
+                secretKeyRef:
+                  name: ai-stor-license
+                  key: minio.license
           envFrom:
             - configMapRef:
                 name: ai-stor-config

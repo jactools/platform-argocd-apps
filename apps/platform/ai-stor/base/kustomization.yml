@@ -13,6 +13,7 @@ resources:
   - headless-service.yml
   - configmap.yml
   - pvc.yml
+  - license-secret.yml
 
 labels:
   - pairs:

@@ -17,7 +17,7 @@ resources:
   - configmap.yml
   - kong-db-pvc.yml
   - kong-db.yml
-  - kong-migrations.yml
+  # kong-migrations.yml excluded — DB already bootstrapped
   - deployment.yml
   - service.yml
   - ingress.yml
