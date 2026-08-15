@@ -14,7 +14,7 @@ spec:
   validationFailureAction: Enforce
   background: false
   rules:
-    - name: deny-public-registry-containers
+    - name: deny-dockerhub-images
       match:
         any:
           - resources:
@@ -33,12 +33,69 @@ spec:
                 - kube-node-lease
                 - local-path-storage
       validate:
-        message: "Images from public registries are forbidden. Use the local docker-registry or load images via `kind load docker-image`."
+        message: "Images from docker.io are forbidden. Use the local docker-registry or load images via `kind load docker-image`."
+        allowExistingViolations: false
         pattern:
           spec:
             containers:
               - image: "!docker.io/*"
-              - image: "!ghcr.io/*"
             =(initContainers):
               - image: "!docker.io/*"
+
+    - name: deny-ghcr-images
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kyverno
+                - argocd
+                - ingress-nginx
+                - cert-manager
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - local-path-storage
+      validate:
+        message: "Images from ghcr.io are forbidden. Use the local docker-registry or load images via `kind load docker-image`."
+        allowExistingViolations: false
+        pattern:
+          spec:
+            containers:
               - image: "!ghcr.io/*"
+            =(initContainers):
+              - image: "!ghcr.io/*"
+
+    - name: deny-short-image-names
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kyverno
+                - argocd
+                - ingress-nginx
+                - cert-manager
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - local-path-storage
+      validate:
+        message: >-
+          Short image names (e.g. 'nginx') default to docker.io.
+          Use fully-qualified image names from the local docker-registry.
+        allowExistingViolations: false
+        pattern:
+          spec:
+            containers:
+              - image: "*/*"
+            =(initContainers):
+              - image: "*/*"
