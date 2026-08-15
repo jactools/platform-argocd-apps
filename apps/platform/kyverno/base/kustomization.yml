@@ -6,7 +6,7 @@ namespace: kyverno
 labels:
   - includeSelectors: false
     pairs:
-      platform.jaccloud.nl/managed-by: argocd
+      platform.jaccloud.nl/managed-by: flux
       platform.jaccloud.nl/component: kyverno
       platform.jaccloud.nl/service: kyverno
       platform.jaccloud.nl/tenant: platform
